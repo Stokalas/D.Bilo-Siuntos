@@ -7,5 +7,5 @@ test('renders current date', () => {
   // render(<DateDisplay />);
   // const timeFormat = screen.getByText('2022');
   // expect(timeFormat).toBeInTheDocument();
-  expect(true).toBeTrue();
+  expect(true).toBeTruthy();
 });
