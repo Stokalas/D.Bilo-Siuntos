@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Models
 {
-    internal class Parcel
+    public class Parcel
     {
         public int Id { get; set; }
         [Key]
-        public string? TrackingNumber { get; set; }
+        public string TrackingNumber { get; set; }
         
     }
 }
