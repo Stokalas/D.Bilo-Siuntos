@@ -11,7 +11,7 @@ namespace Infrastructure.Models
     {
         public int Id { get; set; }
         [Key]
-        public string TrackingNumber { get; set; }
+        public string? TrackingNumber { get; set; }
         
     }
 }

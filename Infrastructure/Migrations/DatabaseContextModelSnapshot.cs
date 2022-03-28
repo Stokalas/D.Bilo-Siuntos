@@ -31,7 +31,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("TrackingNumber");
 
-                    b.ToTable("Parcels");
+                    b.ToTable("Parcels", (string)null);
                 });
 #pragma warning restore 612, 618
         }
