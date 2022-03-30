@@ -12,10 +12,30 @@
     "at-rule-no-vendor-prefix": true,
     "selector-no-vendor-prefix": true,
     "max-nesting-depth": 3,
-    "selector-max-compound-selectors": 5
+    "selector-max-compound-selectors": 5,
+    "color-hex-length": "long",
+    "at-rule-no-unknown": null,
+    "scss/at-rule-no-unknown": true,
+    "max-line-length": 120,
+    "order/properties-order": [
+      "position"
+    ]
   },
-  "plugins": [
-    "stylelint-order"
+  "overrides": [
+    {
+      "files": [
+        "*.scss",
+        "**/*.scss"
+      ],
+      "customSyntax": "postcss-scss"
+    }
   ],
-  "ignoreFiles": ["**/*.snap"]
+  "plugins": [
+    "stylelint-order",
+    "stylelint-scss"
+  ],
+  "ignoreFiles": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
