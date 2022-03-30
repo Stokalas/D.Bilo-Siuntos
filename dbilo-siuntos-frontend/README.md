@@ -16,6 +16,10 @@
 
 Install npm packages by calling `yarn install` from this directory.
 
+## Pre-commit and pre-push hooks
+
+On `git commit` and `git push` pre-commit and pre-push will be run. If you want to skip these scripts, use `--no-verify` flag
+
 ### Launching project
 
 - Use `yarn start` to launch the project against local backend. The command will launch Webpack Dev Server to listen for Typescript and style changes.
