@@ -11,6 +11,7 @@ on:
 jobs:
 
   build_webApi:
+    name: Build .NET Web API
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,6 +33,7 @@ jobs:
         run: dotnet test
 
   build_react_App:
+    name: Build React App
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -44,12 +46,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-
-      - name: Cache Dependencies
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Dependencies
         run: yarn install
