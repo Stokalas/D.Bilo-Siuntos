@@ -1,117 +1,39 @@
-<h1 align="center">DBilo Siuntos Front End</h1>
+# DBilo Siuntos Front End
 
-<br />
+## Prerequisites
 
-TBD:
-Explain how to run.
+- [Node.js](https://nodejs.org/en/) (latest 16.x recommended)
+- Yarn (install using npm (`npm i -g yarn`) or download [standalone installer](https://yarnpkg.com/lang/en/docs/install/))
+- [VS Code](https://code.visualstudio.com/) or any other text editor that supports Typescript, ESLint, Sass Lint and Prettier plugins. Required plugins for VS Code:
+  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+  - [Sass Lint](https://marketplace.visualstudio.com/items?itemName=glen-84.sass-lint)
+  - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+  - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 
-Explain needed packages.
+**NOTE:** If you use other text editor, make sure that ESLint checks `.ts` and `.tsx` files.
 
-Explain existing scripts.
+## Setup
 
-<br />
+Install npm packages by calling `yarn install` from this directory.
 
-This is a blank README file that you can customize at your needs.\
-Describe your project, how it works and how to contribute to it.
+## Pre-commit and pre-push hooks
 
-<br />
+On `git commit` and `git push` pre-commit and pre-push will be run. If you want to skip these scripts, use `--no-verify` flag
 
-# 🚀 Available Scripts
+### Launching project
 
-In the project directory, you can run:
+- Use `yarn start` to launch the project against local backend. The command will launch Webpack Dev Server to listen for Typescript and style changes.
 
-<br />
+### Running tests
 
-## ⚡️ start
+Use `yarn test` to run all unit tests. Jest is used as a test runner, so you can use all available [Jest CLI options](https://jestjs.io/docs/en/cli.html)
+(e.g. you can collect code coverage by setting `--coverage` flag).
+Watch mode is turned on by default, pass `--no-watch` flag to turn in off.
 
-```
-yarn start
-```
+## Scripts
 
-or
-
-```
-yarn start
-```
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-<br />
-
-## 🧪 test
-
-```
-yarn test
-```
-
-or
-
-```
-yarn test
-```
-
-Launches the test runner in the interactive watch mode.
-
-<br />
-
-## 🦾 build
-
-```
-yarn build
-```
-
-or
-
-```
-yarn build
-```
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.
-
-<br />
-
-# 🧬 Project structure
-
-This is the structure of the files in the project:
-
-```sh
-    │
-    ├── public                  # public files (favicon, .htaccess, manifest, ...)
-    ├── src                     # source files
-    │   ├── components
-    │   ├── pages
-    │   ├── resources           # images, constants and other static resources
-    │   ├── store               # Redux store
-    │   │   ├── actions         # store's actions
-    │   │   └── reducers        # store's reducers
-    │   ├── styles
-    │   ├── tests               # all test files
-    │   ├── types               # data interfaces
-    │   ├── utility             # utilities functions and custom components
-    │   ├── App.tsx
-    │   ├── index.tsx
-    │   ├── react-app-env.d.ts
-    │   ├── RootComponent.tsx   # React component with all the routes
-    │   ├── serviceWorker.ts
-    │   └── setupTests.ts
-    ├── .eslintrc.js
-    ├── .gitignore
-    ├── .prettierrc
-    ├── package.json
-    ├── README.md
-    └── tsconfig.json
-```
-
-# 📖 Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-#
-
-<p align="center">Bootstrapped with Create React App.</p>
+- Use `yarn start` to launch the project against local backend. The command will launch Webpack Dev Server to listen for Typescript and style changes.
+- Use `yarn lint` to automatically detect code and css style issues.
+- Use `yarn lint:fix` to automatically detect and fix code and css style issues (not all can be fixed automatically).
+- Use `yarn typescript` to automatically detect typescript.
+- Use `yarn test` to run tests.

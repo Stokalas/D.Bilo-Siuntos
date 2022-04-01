@@ -3,3 +3,4 @@
 
 cd dbilo-siuntos-frontend/.husky
 npx lint-staged
+yarn typecheck
