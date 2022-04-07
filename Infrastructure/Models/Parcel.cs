@@ -16,10 +16,13 @@ namespace Infrastructure.Models
         public int Id { get; set; }
         [Key]
         public string? TrackingNumber { get; set; }
-        public DateTime DeliveryDateTime { get; set; }
-        public string? DeliveryAddress { get; set; }
         public Size? Size { get; set; }
 
+        public int? ShipperID { get; set; }
+        public DateTime ShipmentDate { get; set; }
+        public Address? ShippingAddress { get; set; }
 
+        public DateTime DeliveryDate { get; set; }
+        public virtual Address? DeliveryAddress { get; set; }
     }
 }
