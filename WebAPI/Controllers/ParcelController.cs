@@ -27,5 +27,12 @@ namespace WebAPI.Controllers
                 new Parcel { Id = 3, TrackingNumber = Guid.NewGuid().ToString()}
             };
         }
+
+        [HttpPost("parcel")]
+        public ActionResult<Parcel> Post(Parcel parcel)
+        {
+            _logger.LogInformation("Received Post request at parcel\n"+parcel.ToString()); //testing purposes
+            return Ok(parcel);
+        }
     }
 }
