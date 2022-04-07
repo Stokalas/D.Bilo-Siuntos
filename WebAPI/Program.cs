@@ -16,6 +16,10 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddLogging(loggingBuilder => {
+    loggingBuilder.AddFile("app.log", append: true);
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
