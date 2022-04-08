@@ -17,7 +17,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging(loggingBuilder => {
-    loggingBuilder.AddFile("app.log", append: true);
+    loggingBuilder.AddFile("logs/app_{0:yyyy}-{0:MM}-{0:dd}.log", fileLoggerOpts => {
+        fileLoggerOpts.FormatLogFileName = fName => {
+            return String.Format(fName, DateTime.UtcNow);
+        };
+    });
 });
 
 var app = builder.Build();
