@@ -12,5 +12,6 @@ namespace Infrastructure
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base (options) { }
         public DbSet<Parcel>? Parcels { get; set; }
+        public DbSet<User>? Users { get; set; }
     }
 }
