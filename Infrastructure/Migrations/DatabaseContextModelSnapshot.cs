@@ -47,7 +47,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
@@ -87,7 +87,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Parcels");
+                    b.ToTable("Parcels", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>
@@ -117,7 +117,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
