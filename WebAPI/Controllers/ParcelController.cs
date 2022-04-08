@@ -30,6 +30,18 @@ namespace WebAPI.Controllers
             return Ok(repo);
         }
 
+        [HttpGet("parcel/{id}")]
+        public ActionResult<Parcel> GetParcel(int id)
+        {
+            _logger.LogInformation("Received GET request at parcel/" + id); //testing purposes
+            var res = repo.Where(p => p.Id == id);
+            if (!res.Any())
+            {
+                return NotFound();
+            }
+            return Ok(res);
+        }
+
         [HttpPost("parcel")]
         public ActionResult<Parcel> Post(Parcel parcel)
         {
@@ -37,11 +49,5 @@ namespace WebAPI.Controllers
             return Ok(parcel);
         }
         
-        [HttpGet("parcel/{id}")]
-        public ActionResult<Parcel> GetParcel(int id)
-        {
-            _logger.LogInformation("Received GET request at parcel/"+id); //testing purposes
-            return Ok(repo.Where(p => p.Id == id));
-        }
     }
 }
