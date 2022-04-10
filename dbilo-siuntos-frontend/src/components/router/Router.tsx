@@ -7,18 +7,6 @@ import { ROUTES } from 'src/resources/routes-constants';
 import { HomePage } from 'src/pages/HomePage';
 import { Footer } from '../Footer';
 
-const About = () => (
-  <div>
-    <h2>About</h2>
-  </div>
-);
-
-const Dashboard = () => (
-  <div>
-    <h2>Dashboard</h2>
-  </div>
-);
-
 export const Router = () => {
   return (
     <BrowserRouter>
@@ -31,14 +19,14 @@ export const Router = () => {
         )}
         rightChildren={() => (
           <>
-            <NavBarButton name="Dashboard" url={ROUTES.DASHBOARD} />
+            <NavBarButton name="Placeholder" url={ROUTES.PLACEHOLDER} />
           </>
         )}
       />
       <Routes>
         <Route element={<HomePage />} path={ROUTES.HOMEPAGE} />
-        <Route element={<About />} path={ROUTES.ABOUT} />
-        <Route element={<Dashboard />} path={ROUTES.DASHBOARD} />
+        <Route element={<h2>About</h2>} path={ROUTES.ABOUT} />
+        <Route element={<h2>Placeholder</h2>} path={ROUTES.PLACEHOLDER} />
       </Routes>
       <Footer />
     </BrowserRouter>
