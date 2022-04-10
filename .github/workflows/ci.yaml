@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   build_webApi:
     name: Build .NET Web API
     runs-on: ubuntu-latest
@@ -22,8 +21,8 @@ jobs:
       - name: Setup .NET 6.X
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.x'
-      
+          dotnet-version: "6.x"
+
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -45,7 +44,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: "16.x"
 
       - name: Get Yarn cache
         id: yarn-cache
@@ -64,10 +63,5 @@ jobs:
       - name: Run Lint
         run: yarn lint
 
-      - name: Run Unit Tests
-        run: yarn test --no-watch
-
       - name: Build
         run: yarn build
-
-    

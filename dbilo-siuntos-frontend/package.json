@@ -31,6 +31,7 @@
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "husky": "7.0.4",
+    "luxon": "^2.3.1",
     "postcss-scss": "4.0.3",
     "prettier": "2.2.1",
     "react": "17.0.2",
@@ -43,10 +44,12 @@
     "sass": "1.49.9",
     "sass-loader": "12.3.0",
     "stylelint": "14.6.1",
+    "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "25.0.0",
     "stylelint-order": "5.0.0",
     "stylelint-scss": "4.2.0",
-    "typescript": "4.5.4"
+    "typescript": "4.5.4",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -59,7 +62,8 @@
     "lint-js": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "yarn lint-css --fix && yarn lint-js --fix",
     "lint-css:fix": "stylelint ./src/ --fix",
-    "lint-js:fix": "eslint ./src --fix .js,.jsx,.ts,.ts"
+    "lint-js:fix": "eslint ./src --fix .js,.jsx,.ts,.ts",
+    "stylelint-check": "stylelint-config-prettier-check"
   },
   "eslintConfig": {
     "extends": "react-app"
