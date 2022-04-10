@@ -1,3 +1,5 @@
 export const ROUTES = {
-  HOMEPAGE_ROUTE: '/',
+  HOMEPAGE: '/',
+  ABOUT: '/about',
+  DASHBOARD: '/dashboard',
 };

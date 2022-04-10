@@ -1,4 +1,4 @@
-@import "./_variables";
+@import './_variables';
 
 @mixin flexbox($justify, $align, $direction, $wrap) {
   align-items: $align;
@@ -17,25 +17,25 @@
 }
 
 @mixin breakpoint($class) {
-  @if ($class == "<phone") {
+  @if ($class == '<phone') {
     @media (max-width: $phone-size) {
       @content;
     }
   }
 
-  @if ($class == "<tablet") {
+  @if ($class == '<tablet') {
     @media (max-width: $tablet-size) {
       @content;
     }
   }
 
-  @if ($class == "<desktop") {
+  @if ($class == '<desktop') {
     @media (max-width: $desktop-size) {
       @content;
     }
   }
 
-  @if ($class == ">desktop") {
+  @if ($class == '>desktop') {
     @media (min-width: $desktop-size) {
       @content;
     }
