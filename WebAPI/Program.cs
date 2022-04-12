@@ -16,9 +16,17 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddLogging(loggingBuilder => {
-    loggingBuilder.AddFile("logs/app_{0:yyyy}-{0:MM}-{0:dd}.log", fileLoggerOpts => {
-        fileLoggerOpts.FormatLogFileName = fName => {
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+   {
+       builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+   }));
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddFile("logs/app_{0:yyyy}-{0:MM}-{0:dd}.log", fileLoggerOpts =>
+    {
+        fileLoggerOpts.FormatLogFileName = fName =>
+        {
             return String.Format(fName, DateTime.UtcNow);
         };
     });
@@ -40,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("corsapp");
 
 app.UseHttpsRedirection();
 
