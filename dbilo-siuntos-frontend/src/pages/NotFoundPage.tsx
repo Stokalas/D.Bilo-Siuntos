@@ -10,7 +10,7 @@ export const NotFoundPage: React.FC = () => {
    * Call this function to redirect the user to the homepage.
    */
   const redirectToHomePage = () => {
-    navigate(ROUTES.HOMEPAGE);
+    navigate(ROUTES.HOMEPAGE.url);
   };
 
   return (
