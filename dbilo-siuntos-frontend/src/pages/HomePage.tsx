@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { alpha, Typography } from '@mui/material';
 
 import homepageImage from '../assets/homepage-image.jpg';
+import { api } from 'src/api';
 
 export const HomePage: React.FC = () => {
+  useEffect(() => {
+    api.get('parcel/all').then((response) => {
+      console.log(response);
+    });
+  }, []);
+
   return (
     <Container disableGutters maxWidth={false}>
       <Box minHeight="450px" bgcolor={(theme) => alpha(theme.palette.secondary.main, 0.5)}>
