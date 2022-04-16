@@ -1,5 +1,5 @@
 export const ROUTES = {
-  HOMEPAGE: '/',
-  ABOUT: '/about',
-  PLACEHOLDER: '/placeholder',
+  HOMEPAGE: { url: '/', name: 'Homepage' },
+  ABOUT: { url: '/about', name: 'About' },
+  PLACEHOLDER: { url: '/placeholder', name: 'Placeholder' },
 };
