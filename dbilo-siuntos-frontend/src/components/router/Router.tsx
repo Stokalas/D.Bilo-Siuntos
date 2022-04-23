@@ -5,6 +5,7 @@ import { Header } from './Header';
 import { ROUTES } from 'src/resources/routes-constants';
 import { HomePage } from 'src/pages/HomePage';
 import { Footer } from './Footer';
+import { GoogleMap } from '../GoogleMap';
 
 export const Router = () => {
   return (
@@ -12,7 +13,15 @@ export const Router = () => {
       <Header />
       <Routes>
         <Route element={<HomePage />} path={ROUTES.HOMEPAGE.url} />
-        <Route element={<h2>About</h2>} path={ROUTES.ABOUT.url} />
+        <Route
+          element={
+            <div>
+              <GoogleMap></GoogleMap>
+              <h2>About</h2>
+            </div>
+          }
+          path={ROUTES.ABOUT.url}
+        />
         <Route element={<h2>Placeholder</h2>} path={ROUTES.PLACEHOLDER.url} />
       </Routes>
       <Footer />
