@@ -46,6 +46,7 @@
     "redux-thunk": "2.4.1",
     "sass": "1.49.9",
     "sass-loader": "12.3.0",
+    "styled-components": "^5.3.5",
     "stylelint": "14.6.1",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "25.0.0",
