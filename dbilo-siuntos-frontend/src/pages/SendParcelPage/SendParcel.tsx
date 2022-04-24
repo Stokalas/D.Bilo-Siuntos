@@ -2,8 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from '@emotion/styled';
 import { Typography, Button } from '@mui/material';
 
-import { SendReceiverForm } from './SendReceiverForm';
-import { SendSenderForm } from './SendSenderForm';
+import { SendParcelForm } from './SendParcelForm';
 
 export type SendFormProps = {
   setName: Dispatch<SetStateAction<string>>;
@@ -12,6 +11,8 @@ export type SendFormProps = {
   setEmail: Dispatch<SetStateAction<string>>;
   setAddress: Dispatch<SetStateAction<string>>;
   setPostalCode: Dispatch<SetStateAction<string>>;
+  formType: string;
+  formTitle: string;
 };
 
 export const SendParcel = () => {
@@ -52,30 +53,31 @@ export const SendParcel = () => {
       <Typography fontFamily="orbitron, sans-serif" fontSize="24px" color="primary">
         Register Parcel
       </Typography>
-      {/* <Typography fontFamily="orbitron, sans-serif" fontSize="12px" color="navy"> */}
-      <FormWrapper onSubmit={handleSubmit}>
-        <InputsWrapper>
-        <SendReceiverForm
+      <FormWrapper id="parcelForm" onSubmit={handleSubmit}>
+        <SendParcelForm
           setName={setRname}
           setSurname={setRsurname}
           setPhoneNum={setRphoneNum}
           setEmail={setRemail}
           setAddress={setRaddress}
           setPostalCode={setRpostalCode}
+          formType="receiver"
+          formTitle="Gavėjas"
         />
-        <SendSenderForm
+        <SendParcelForm
           setName={setSname}
           setSurname={setSsurname}
           setPhoneNum={setSphoneNum}
           setEmail={setSemail}
           setAddress={setSaddress}
           setPostalCode={setSpostalCode}
+          formType="sender"
+          formTitle="Siuntėjas"
         />
-        <Button type="submit">Send</Button>
-        </InputsWrapper>
       </FormWrapper>
-      
-      {/* </Typography> */}
+      <Button type="submit" form="parcelForm">
+        Send
+      </Button>
     </Wrapper>
   );
 };
@@ -87,14 +89,8 @@ const Wrapper = styled.div`
 
 const FormWrapper = styled.form`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-`;
-
-const InputsWrapper = styled.div`
-  display:flex;
   flex-direction: row;
   justify-content: center;
   gap: 50px;
+  margin-bottom: 20px;
 `;
