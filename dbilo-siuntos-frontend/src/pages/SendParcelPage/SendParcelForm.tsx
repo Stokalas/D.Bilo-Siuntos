@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled';
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 
 import { SendFormProps } from './SendParcel';
 
@@ -40,24 +40,34 @@ export const SendParcelForm: React.FC<SendFormProps> = ({
 
   return (
     <div>
-      <h3>{formTitle}</h3>
-      <StyledLabel htmlFor={`${formType}Name`}>Vardas</StyledLabel>
-      <TextField title={`${formType}Name`} placeholder="Jonas" onChange={handleName} />
-      <StyledLabel htmlFor={`${formType}Surname`}>Pavardė</StyledLabel>
-      <TextField title={`${formType}Surname`} placeholder="Jonaitis" onChange={handleSurname} />
-      <StyledLabel htmlFor={`${formType}PhoneNumber`}>Tel. numeris</StyledLabel>
-      <TextField type="tel" title={`${formType}PhoneNumber`} onChange={handlePhoneNum} />
-      <StyledLabel htmlFor={`${formType}Email`}>El. paštas</StyledLabel>
-      <TextField type="email" title={`${formType}Email`} onChange={handleEmail} />
-      <StyledLabel htmlFor={`${formType}Address`}>Adresas</StyledLabel>
-      <TextField title={`${formType}Address`} onChange={handleAddress} />
-      <StyledLabel htmlFor={`${formType}PostalCode`}>Pašto kodas</StyledLabel>
-      <TextField title={`${formType}PostalCode`} onChange={handlePostalCode} />
+      <Typography fontFamily="orbitron, sans-serif" fontSize="16px" color="primary-light">
+        {formTitle}
+      </Typography>
+      <StyledTextField title={`${formType}Name`} onChange={handleName} label="Name" />
+      <StyledTextField title={`${formType}Surname`} onChange={handleSurname} label="Surname" />
+      <StyledTextField
+        type="tel"
+        title={`${formType}PhoneNumber`}
+        onChange={handlePhoneNum}
+        label="Phone Number"
+      />
+      <StyledTextField
+        type="email"
+        title={`${formType}Email`}
+        onChange={handleEmail}
+        label="Email"
+      />
+      <StyledTextField title={`${formType}Address`} onChange={handleAddress} label="Address" />
+      <StyledTextField
+        title={`${formType}PostalCode`}
+        onChange={handlePostalCode}
+        label="Postal Code"
+      />
     </div>
   );
 };
 
-const StyledLabel = styled.label`
+const StyledTextField = styled(TextField)`
   display: block;
-  text-align: left;
+  margin: 8px 0 8px;
 `;

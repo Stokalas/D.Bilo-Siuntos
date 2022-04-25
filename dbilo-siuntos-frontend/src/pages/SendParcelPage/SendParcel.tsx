@@ -62,7 +62,7 @@ export const SendParcel = () => {
           setAddress={setRaddress}
           setPostalCode={setRpostalCode}
           formType="receiver"
-          formTitle="Gavėjas"
+          formTitle="Receiver"
         />
         <SendParcelForm
           setName={setSname}
@@ -72,10 +72,10 @@ export const SendParcel = () => {
           setAddress={setSaddress}
           setPostalCode={setSpostalCode}
           formType="sender"
-          formTitle="Siuntėjas"
+          formTitle="Sender"
         />
       </FormWrapper>
-      <Button type="submit" form="parcelForm">
+      <Button variant="contained" type="submit" form="parcelForm">
         Send
       </Button>
     </Wrapper>
@@ -83,7 +83,7 @@ export const SendParcel = () => {
 };
 
 const Wrapper = styled.div`
-  margin-top: 24px;
+  margin: 48px 0 48px;
   text-align: center;
 `;
 
@@ -92,5 +92,5 @@ const FormWrapper = styled.form`
   flex-direction: row;
   justify-content: center;
   gap: 50px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 `;
