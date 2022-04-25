@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess
 {
-    public class UserDataAccess : IUser
+    public class UserService : IUserService
     {
         private readonly DatabaseContext _dbContext;
 
-        public UserDataAccess(DatabaseContext dbContext)
+        public UserService(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -20,7 +20,7 @@ namespace Infrastructure.DataAccess
                 var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                 {
-                    throw new ArgumentNullException();
+                    return null;
                 }
                 return user;
             }
@@ -55,17 +55,18 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task Delete(int id)
+        public async Task<User> Delete(int id)
         {
             try
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                 {
-                    throw new ArgumentNullException();
+                    return null;
                 }
                 _dbContext.Users.Remove(user);
                 await _dbContext.SaveChangesAsync();
+                return user;
             }
             catch
             {
@@ -73,14 +74,14 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task Update(int id, User updatedUser)
+        public async Task<User> Update(int id, User updatedUser)
         {
             try
             {
                 var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                 {
-                    throw new ArgumentNullException();
+                    return null;
                 }
                 user.Name = updatedUser.Name;
                 user.Email = updatedUser.Email;
@@ -91,6 +92,7 @@ namespace Infrastructure.DataAccess
 
                 _dbContext.Users.Update(user);
                 await _dbContext.SaveChangesAsync();
+                return user;
             }
             catch
             {
