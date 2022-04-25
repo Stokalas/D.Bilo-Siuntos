@@ -52,12 +52,12 @@ export const Header: React.FC = () => {
               <>
                 <Box display="flex" alignItems="center" marginRight="auto">
                   {leftRoutes.map((route) => (
-                    <NavBarButton name={route.name} url={route.url} />
+                    <NavBarButton key={route.name} name={route.name} url={route.url} />
                   ))}
                 </Box>
                 <Box display="flex" marginLeft="auto">
                   {rightRoutes.map((route) => (
-                    <NavBarButton name={route.name} url={route.url} />
+                    <NavBarButton key={route.name} name={route.name} url={route.url} />
                   ))}
                 </Box>
               </>
