@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Infrastructure.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Models
 {
@@ -11,7 +7,14 @@ namespace Infrastructure.Models
     {
         public int Id { get; set; }
         [Key]
-        public string? TrackingNumber { get; set; }
-        
+        public string TrackingNumber { get; set; }
+        public ParcelSize Size { get; set; }
+
+        public int ShipperID { get; set; }
+        public DateTime ShipmentDate { get; set; }
+        public Address? ShippingAddress { get; set; }
+
+        public DateTime? DeliveryDate { get; set; }
+        public Address? DeliveryAddress { get; set; }
     }
 }
