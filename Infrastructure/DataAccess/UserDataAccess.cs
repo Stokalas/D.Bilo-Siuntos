@@ -1,14 +1,10 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Interfaces;
+using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.DataAccess
 {
-    public class UserDataAccess
+    public class UserDataAccess : IUser
     {
         private readonly DatabaseContext _dbContext;
 
