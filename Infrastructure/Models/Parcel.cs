@@ -7,11 +7,11 @@ namespace Infrastructure.Models
     {
         public int Id { get; set; }
         [Key]
-        public string? TrackingNumber { get; set; }
-        public ParcelSize? Size { get; set; }
+        public string TrackingNumber { get; set; }
+        public ParcelSize Size { get; set; }
 
-        public int? ShipperID { get; set; }
-        public DateTime? ShipmentDate { get; set; }
+        public int ShipperID { get; set; }
+        public DateTime ShipmentDate { get; set; }
         public Address? ShippingAddress { get; set; }
 
         public DateTime? DeliveryDate { get; set; }
