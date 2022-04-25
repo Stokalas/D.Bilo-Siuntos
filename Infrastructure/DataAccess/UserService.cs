@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess
 {
-    public class UserService : IUserService
+    public class AddressService : IUserService
     {
         private readonly DatabaseContext _dbContext;
 
-        public UserService(DatabaseContext dbContext)
+        public AddressService(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -83,11 +83,7 @@ namespace Infrastructure.DataAccess
                 {
                     return null;
                 }
-                user.Name = updatedUser.Name;
-                user.Email = updatedUser.Email;
                 user.Address = updatedUser.Address;
-                user.LastName = updatedUser.LastName;
-                user.PhoneNumber = updatedUser.PhoneNumber;
                 user.Parcels = updatedUser.Parcels;
 
                 _dbContext.Users.Update(user);
@@ -99,7 +95,5 @@ namespace Infrastructure.DataAccess
                 throw;
             }
         }
-
-
     }
 }
