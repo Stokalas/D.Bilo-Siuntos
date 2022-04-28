@@ -24,10 +24,10 @@ namespace Infrastructure.DataAccess
                 }
                 return parcel;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
 
@@ -37,10 +37,10 @@ namespace Infrastructure.DataAccess
             {
                 return await _dbContext.Parcels.Where(x => x.ShipperID == id).ToListAsync();
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
 
@@ -50,10 +50,10 @@ namespace Infrastructure.DataAccess
             {
                 return await _dbContext.Parcels.ToListAsync();
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
 
@@ -65,10 +65,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return newParcel.TrackingNumber;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
 
@@ -85,10 +85,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
 
@@ -111,10 +111,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("{0} Exception caught!", e);
-                return null;
+                //Log error
+                throw;
             }
         }
     }
