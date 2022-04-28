@@ -24,9 +24,10 @@ namespace Infrastructure.DataAccess
                 }
                 return parcel;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -36,9 +37,10 @@ namespace Infrastructure.DataAccess
             {
                 return await _dbContext.Parcels.Where(x => x.ShipperID == id).ToListAsync();
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -48,22 +50,25 @@ namespace Infrastructure.DataAccess
             {
                 return await _dbContext.Parcels.ToListAsync();
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
-        public async Task Insert(Parcel newParcel)
+        public async Task<String> Insert(Parcel newParcel)
         {
             try
             {
                 await _dbContext.Parcels.AddAsync(newParcel);
                 await _dbContext.SaveChangesAsync();
+                return newParcel.TrackingNumber;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -80,9 +85,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -105,9 +111,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
     }

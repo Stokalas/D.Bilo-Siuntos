@@ -6,7 +6,7 @@ namespace Infrastructure.Interfaces
     {
         public Task<User> GetById(int id);
         public Task<IList<User>> GetAll();
-        public Task Insert(User newUser);
+        public Task<User> Insert(User newUser);
         public Task<User> Delete(int id);
         public Task<User> Update(int id, User updatedUser);
     }

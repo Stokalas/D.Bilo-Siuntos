@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess
 {
-    public class AddressService : IUserService
+    public class UserService : IUserService
     {
         private readonly DatabaseContext _dbContext;
 
-        public AddressService(DatabaseContext dbContext)
+        public UserService(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -24,9 +24,10 @@ namespace Infrastructure.DataAccess
                 }
                 return user;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -36,22 +37,25 @@ namespace Infrastructure.DataAccess
             {
                 return await _dbContext.Users.ToListAsync();
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
-        public async Task Insert(User newUser)
+        public async Task<User> Insert(User newUser)
         {
             try
             {
                 await _dbContext.Users.AddAsync(newUser);
                 await _dbContext.SaveChangesAsync();
+                return newUser;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -68,9 +72,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return user;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
 
@@ -90,9 +95,10 @@ namespace Infrastructure.DataAccess
                 await _dbContext.SaveChangesAsync();
                 return user;
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine("{0} Exception caught!", e);
+                return null;
             }
         }
     }
