@@ -6,7 +6,8 @@ import { alpha, Typography } from '@mui/material';
 
 import homepageImage from '../assets/homepage-image.jpg';
 import { api } from 'src/api';
-import { GoogleMap } from 'src/components/GoogleMap';
+// import { GoogleMap } from 'src/components/GoogleMap';
+import { App } from 'src/components/Map';
 
 export const HomePage: React.FC = () => {
   useEffect(() => {
@@ -57,7 +58,8 @@ export const HomePage: React.FC = () => {
       <Container maxWidth="lg">
         <Grid spacing={0} sx={{ marginTop: '10px' }} container>
           <Grid item sm={12}>
-            <GoogleMap></GoogleMap>
+            {/* <GoogleMap></GoogleMap> */}
+            <App></App>
           </Grid>
         </Grid>
       </Container>
