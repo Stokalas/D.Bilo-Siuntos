@@ -1,4 +1,4 @@
-name: CI
+name: D.Bilo-Siuntos CI
 
 on:
   push:
@@ -25,9 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
+      - name: Build WebAPI project
         run: dotnet build
-      - name: Test with the dotnet CLI
+      - name: Run WebAPI tests
         working-directory: ./WebAPI.Tests
         run: dotnet test
 
@@ -57,11 +57,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Dependencies
+      - name: Install UI Dependencies
         run: yarn install --ignore-scripts
 
       - name: Run Lint
         run: yarn lint
 
-      - name: Build
+      - name: Build UI
         run: yarn build

@@ -29,6 +29,7 @@ export const Header: React.FC = () => {
   const leftRoutes = [
     { ...ROUTES.HOMEPAGE, renderIcon: () => <HomeIcon /> },
     { ...ROUTES.ABOUT, renderIcon: () => <InfoIcon /> },
+    { ...ROUTES.CREATE_PARCEL, renderIcon: () => <InfoIcon /> },
   ];
   const rightRoutes = [{ ...ROUTES.PLACEHOLDER, renderIcon: () => <QuestionMarkIcon /> }];
 
