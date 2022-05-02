@@ -10,21 +10,29 @@ interface MapProps extends google.maps.MapOptions {
   onIdle?: (map: google.maps.Map) => void;
 }
 
-export const Map: React.FC<MapProps> = ({ onClick, onIdle, children, style, ...options }) => {
+export const Map: React.FC<MapProps> = ({
+  onClick,
+  onIdle,
+  children,
+  style,
+  infoWindow,
+  setInfoWindow,
+  ...options
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
 
   useEffect(() => {
     if (ref.current && !map) {
       setMap(new window.google.maps.Map(ref.current, {}));
-      if (!options.infoWindow && options.setInfoWindow) {
+      if (!infoWindow && setInfoWindow) {
         const infowindow = new google.maps.InfoWindow({
           content: 'contentString',
         });
-        options.setInfoWindow(infowindow);
+        setInfoWindow(infowindow);
       }
     }
-  }, [ref, map]);
+  }, [ref, map, infoWindow, setInfoWindow]);
 
   // because React does not do deep comparisons, a custom hook is used
   // see discussion in https://github.com/googlemaps/js-samples/issues/946
@@ -39,16 +47,7 @@ export const Map: React.FC<MapProps> = ({ onClick, onIdle, children, style, ...o
       ['click', 'idle'].forEach((eventName) => google.maps.event.clearListeners(map, eventName));
 
       if (onClick) {
-        if (options.infoWindow) {
-          const newOnClick = (e: google.maps.MapMouseEvent) => {
-            options.infoWindow!.close();
-
-            onClick(e);
-          };
-          map.addListener('click', newOnClick);
-        } else {
-          map.addListener('click', onClick);
-        }
+        map.addListener('click', onClick);
       }
 
       if (onIdle) {
@@ -57,17 +56,13 @@ export const Map: React.FC<MapProps> = ({ onClick, onIdle, children, style, ...o
     }
   }, [map, onClick, onIdle]);
 
-  //   const infoWindow = new google.maps.InfoWindow({
-  //     content: 'contentString',
-  //   });
-
   return (
     <>
       <div ref={ref} style={style} />
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           // set the map prop on the child component
-          return React.cloneElement(child, { map, infoWindow: options.infoWindow });
+          return React.cloneElement(child, { map, infoWindow });
         }
         return null;
       })}

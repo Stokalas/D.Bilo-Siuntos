@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-//on click should display an info window
-
 interface MarkerProps extends google.maps.MarkerOptions {
   infoWindow?: google.maps.InfoWindow;
+  name?: string;
 }
 
-export const Marker: React.FC<MarkerProps> = (options) => {
+export const Marker: React.FC<MarkerProps> = ({ ...options }) => {
   const [marker, setMarker] = useState<google.maps.Marker>();
-
-  //   const infowindow = new google.maps.InfoWindow({
-  //     content: 'contentString',
-  //   });
 
   useEffect(() => {
     if (!marker) {
@@ -31,6 +26,7 @@ export const Marker: React.FC<MarkerProps> = (options) => {
       marker.setOptions(options);
       if (options.infoWindow) {
         marker.addListener('click', () => {
+          options.infoWindow?.setContent(options?.name);
           options.infoWindow!.open({
             anchor: marker,
             map: options.map,
