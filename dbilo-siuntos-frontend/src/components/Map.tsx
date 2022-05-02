@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
+import { Button, TextField } from '@mui/material';
 
-import { Map } from './map/Map';
 import { Marker } from './map/Marker';
+import { Map } from './map/Map';
 
 const render = (status: Status) => {
   return <h1>{status}</h1>;
@@ -13,19 +14,13 @@ interface MarkerProps {
   label: string;
 }
 
-interface MarkerProps2 {
-  position: google.maps.LatLngLiteral;
-  label: string;
-}
-
 const dbMarkers = [
-  { label: 'Kaunas', position: { lat: 55, lng: 24 } },
-  { label: 'Vilnius', position: { lat: 55.3, lng: 24.3 } },
-  { label: 'Klaipeda', position: { lat: 55.6, lng: 24.6 } },
+  { label: 'Kaunas', position: { lat: 55, lng: 24 }, address: 'Kaunas, Lithuania' },
+  { label: 'Vilnius', position: { lat: 55.3, lng: 24.3 }, address: 'Vilnius, Lithuania' },
+  { label: 'Klaipeda', position: { lat: 55.6, lng: 24.6 }, address: 'Klaipeda, Lithuania' },
 ];
 
-export const App: React.VFC = () => {
-  const [locations, setLocations] = React.useState<MarkerProps2[]>([]);
+export const TheMap: React.VFC = () => {
   const [markers, setMarkers] = React.useState<MarkerProps[]>([]);
   const [zoom, setZoom] = React.useState(7); // initial zoom
   const [infoWindow, setInfoWindow] = React.useState<google.maps.InfoWindow>();
@@ -34,10 +29,35 @@ export const App: React.VFC = () => {
     lng: 24,
   });
   const [status, setStatus] = React.useState(Status.LOADING);
+  const [geocoder, setGeocoder] = React.useState<google.maps.Geocoder>();
+  const [address, setAddress] = React.useState('');
+
+  const geocode = React.useCallback(
+    (request: google.maps.GeocoderRequest) => {
+      geocoder!
+        .geocode(request)
+        .then((result) => {
+          const { results } = result;
+          setMarkers([
+            ...markers,
+            {
+              label: results[0].formatted_address,
+              position: results[0].geometry.location,
+            },
+          ]);
+        })
+        .catch((e) => {
+          alert('Geocode was not successful for the following reason: ' + e);
+        });
+    },
+    [geocoder, markers]
+  );
 
   React.useEffect(() => {
     if (status === Status.SUCCESS) {
-      console.log(status);
+      const geocoder = new google.maps.Geocoder();
+      setGeocoder(geocoder);
+
       setMarkers(
         dbMarkers.map((x) => {
           return { label: x.label, position: new google.maps.LatLng(x.position) };
@@ -48,20 +68,10 @@ export const App: React.VFC = () => {
 
   const onClick = (e: google.maps.MapMouseEvent) => {
     // avoid directly mutating state
-    console.log('onClick');
-    setLocations([
-      ...locations,
-      { label: '', position: { lat: e.latLng!.lat(), lng: e.latLng!.lng() } },
-    ]);
+    // console.log('onClick');
     setMarkers([...markers, { position: e.latLng!, label: 'e.latLng!' }]);
     infoWindow?.close();
   };
-
-  // const onIdle = (m: google.maps.Map) => {
-  //   // console.log('onIdle');
-  //   setZoom(m.getZoom()!);
-  //   setCenter(m.getCenter()!.toJSON());
-  // };
 
   const form = () => (
     <div
@@ -98,13 +108,13 @@ export const App: React.VFC = () => {
         value={center.lng}
         onChange={(event) => setCenter({ ...center, lng: Number(event.target.value) })}
       />
-      <h3>{locations.length === 0 ? 'Click on map to add markers' : 'Clicks'}</h3>
-      {locations.map((latLng, i) => (
-        <pre key={i}>
-          {JSON.stringify(new google.maps.LatLng(latLng.position).toJSON(), null, 2)}
-        </pre>
+      <h3>{markers.length === 0 ? 'Click on map to add markers' : 'Clicks'}</h3>
+      {markers.map((latLng, i) => (
+        <pre key={i}>{JSON.stringify(latLng.position.toJSON(), null, 2)}</pre>
       ))}
-      <button onClick={() => setLocations([])}>Clear</button>
+      <TextField onChange={(e) => setAddress(e.target.value)}></TextField>
+      <Button onClick={(_) => geocode({ address })}>Geocode</Button>
+      <button onClick={() => setMarkers([])}>Clear</button>
     </div>
   );
 
@@ -113,7 +123,7 @@ export const App: React.VFC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100%' }}>
+    <div style={{ display: 'flex', height: '100%', minHeight: '300px' }}>
       <Wrapper
         callback={onCallBack}
         apiKey="AIzaSyDcuEb2IPoNa_1zzDZkS34-kpDbxWqU_o0"
@@ -122,15 +132,11 @@ export const App: React.VFC = () => {
         <Map
           center={center}
           onClick={onClick}
-          // onIdle={onIdle}
           zoom={zoom}
           infoWindow={infoWindow}
           setInfoWindow={setInfoWindow}
           style={{ flexGrow: '1', height: '100%' }}
         >
-          {/* {locations.map((latLng, i) => (
-            <Marker key={i} position={latLng} />
-          ))} */}
           {markers.map((latLng, i) => (
             <Marker key={i} position={latLng.position} name={latLng.label} />
           ))}
