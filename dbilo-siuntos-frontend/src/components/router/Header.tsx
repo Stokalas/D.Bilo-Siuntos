@@ -8,7 +8,6 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import _ from 'lodash';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import InfoIcon from '@mui/icons-material/Info';
 import HomeIcon from '@mui/icons-material/Home';
@@ -17,20 +16,14 @@ import { headerTheme, ROUTES } from 'src/resources';
 import logo from '../../assets/rocket.jpg';
 import { Hamburger } from './Hamburger';
 import { NavBarButton } from './NavBarButton';
+import { handleResize } from 'src/utility';
 
 export const Header: React.FC = () => {
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < theme.breakpoints.values['sm']);
 
   useEffect(() => {
-    const handleResize = _.debounce(
-      () => setIsMobile(window.innerWidth < theme.breakpoints.values['sm']),
-      100
-    );
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    handleResize(theme, setIsMobile);
   }, [theme]);
 
   const leftRoutes = [
@@ -53,12 +46,12 @@ export const Header: React.FC = () => {
               <>
                 <Box display="flex" alignItems="center" marginRight="auto">
                   {leftRoutes.map((route) => (
-                    <NavBarButton name={route.name} url={route.url} />
+                    <NavBarButton key={route.name} name={route.name} url={route.url} />
                   ))}
                 </Box>
                 <Box display="flex" marginLeft="auto">
                   {rightRoutes.map((route) => (
-                    <NavBarButton name={route.name} url={route.url} />
+                    <NavBarButton key={route.name} name={route.name} url={route.url} />
                   ))}
                 </Box>
               </>
