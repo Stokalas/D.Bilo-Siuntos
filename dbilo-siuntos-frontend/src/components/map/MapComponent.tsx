@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-import { useDeepCompareEffectForMaps } from './mapUtils';
+import { useDeepCompareEffectForMaps } from 'src/utility';
 
 interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
@@ -10,7 +10,7 @@ interface MapProps extends google.maps.MapOptions {
   onIdle?: (map: google.maps.Map) => void;
 }
 
-export const Map: React.FC<MapProps> = ({
+export const MapComponent: React.FC<MapProps> = ({
   onClick,
   onIdle,
   children,

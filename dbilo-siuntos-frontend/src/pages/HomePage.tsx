@@ -1,15 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import { alpha, Typography } from '@mui/material';
+import { alpha, Typography, useTheme } from '@mui/material';
 
 import homepageImage from '../assets/homepage-image.jpg';
 import { api } from 'src/api';
-// import { GoogleMap } from 'src/components/GoogleMap';
-import { TheMap } from 'src/components/Map';
+import { GoogleMap } from 'src/components/map/';
+import { handleResize } from 'src/utility';
 
 export const HomePage: React.FC = () => {
+  const theme = useTheme();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < theme.breakpoints.values['sm']);
+
+  useEffect(() => {
+    handleResize(theme, setIsMobile);
+  }, [theme]);
+
   useEffect(() => {
     api.get('parcel/all').then((response) => {
       console.log(response);
@@ -55,14 +62,18 @@ export const HomePage: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-      <Container maxWidth="lg">
-        <Grid spacing={0} sx={{ marginTop: '10px' }} container>
+      {!isMobile && (
+        <Grid spacing={0} container>
+          <Grid item sm={12} display="flex" justifyContent="center" sx={{ margin: '25px' }}>
+            <Typography fontFamily="orbitron, sans-serif" fontSize="56px">
+              Parcel Terminals
+            </Typography>
+          </Grid>
           <Grid item sm={12}>
-            {/* <GoogleMap></GoogleMap> */}
-            <TheMap></TheMap>
+            <GoogleMap></GoogleMap>
           </Grid>
         </Grid>
-      </Container>
+      )}
       <div style={{ minHeight: '150px' }} />
     </Container>
   );
