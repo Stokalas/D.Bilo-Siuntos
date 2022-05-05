@@ -14,11 +14,11 @@ namespace Infrastructure.DataAccess
             _dbContext = dbContext;
         }
 
-        public async Task<Parcel> GetByTrackingId(string trackingId)
+        public async Task<Parcel> GetByTrackingId(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -73,11 +73,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<Parcel> Delete(string trackingId)
+        public async Task<Parcel> Delete(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -93,11 +93,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<Parcel> Update(string trackingId, Parcel updatedParcel)
+        public async Task<Parcel> Update(string trackingNumber, Parcel updatedParcel)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -118,11 +118,11 @@ namespace Infrastructure.DataAccess
                 throw;
             }
         }
-        public async Task<Parcel> UpdateParcelStatus(string trackingId, Status status)
+        public async Task<Parcel> UpdateParcelStatus(string trackingNumber, Status status)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -139,11 +139,11 @@ namespace Infrastructure.DataAccess
                 throw;
             }
         }
-        public async Task<IList<Status>> GetParcelStatus(string trackingId)
+        public async Task<IList<Status>> GetParcelStatus(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -157,11 +157,11 @@ namespace Infrastructure.DataAccess
                 throw;
             }
         }
-        public async Task<Status> GetLatestParcelStatus(string trackingId)
+        public async Task<Status> GetLatestParcelStatus(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
