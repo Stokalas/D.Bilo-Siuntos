@@ -32,11 +32,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<IList<Parcel>> GetAllByUserId(int id)
+        public async Task<IList<Parcel>> GetAllByUserId(int shipperId)
         {
             try
             {
-                return await _dbContext.Parcels.Where(x => x.ShipperID == id).ToListAsync();
+                return await _dbContext.Parcels.Where(x => x.ShipperID == shipperId).ToListAsync();
             }
             catch
             {
