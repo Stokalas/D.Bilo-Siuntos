@@ -118,6 +118,31 @@ namespace Infrastructure.DataAccess
                 throw;
             }
         }
+        public async Task<Parcel> Update(int id, Parcel updatedParcel)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.Id == id);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                parcel.ShipmentDate = updatedParcel.ShipmentDate;
+                parcel.ShippingAddress = updatedParcel.ShippingAddress;
+
+                parcel.DeliveryDate = updatedParcel.DeliveryDate;
+                parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
+
+                _dbContext.Parcels.Update(parcel);
+                await _dbContext.SaveChangesAsync();
+                return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
         public async Task<Parcel> UpdateParcelStatus(int id, Status status)
         {
             try
