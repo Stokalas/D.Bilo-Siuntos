@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Enums;
+using Infrastructure.Models;
 
 namespace Infrastructure.Interfaces
 {
@@ -10,6 +11,8 @@ namespace Infrastructure.Interfaces
         public Task<String> Insert(Parcel newParcel);
         public Task<Parcel> Delete(string trackingId);
         public Task<Parcel> Update(string trackingId, Parcel updatedParcel);
-
+        public Task<Parcel> UpdateParcelStatus(string trackingId, Status status);
+        public Task<IList<Status>> GetParcelStatus(string trackingId);
+        public Task<Status> GetLatestParcelStatus(string trackingId);
     }
 }

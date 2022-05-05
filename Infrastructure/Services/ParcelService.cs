@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using Infrastructure.Enums;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -110,6 +111,63 @@ namespace Infrastructure.DataAccess
                 _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();
                 return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Parcel> UpdateParcelStatus(string trackingId, Status status)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                parcel.Status.Add(status);
+
+                _dbContext.Parcels.Update(parcel);
+                await _dbContext.SaveChangesAsync();
+                return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<IList<Status>> GetParcelStatus(string trackingId)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                var status = parcel.Status.ToList();
+                return status;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Status> GetLatestParcelStatus(string trackingId)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                var status = parcel.Status.OrderByDescending(x => x.Date).FirstOrDefault();
+                return status;
             }
             catch
             {
