@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         [HttpGet("parcel/all")]
         public async Task<ActionResult<IEnumerable<Parcel>>> Get()
         {
-            _logger.LogInformation("Received GET request at parcel/all Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
+            _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             var result = await _service.GetAll();
             return Ok(result);
         }
@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         [HttpGet("parcel/{id}")]
         public async Task<ActionResult<Parcel>> GetParcel(int id)
         {
-            _logger.LogInformation("Received GET request at parcel/{0} Executed {1}->{2}", id, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); ; //testing purposes
+            _logger.LogInformation("Executed {0}->{1}({2})", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, id); ; //testing purposes
             var res = await _service.GetAllByUserId(id);
 
             return Ok(res);
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<Parcel>> Post(Parcel parcel)
         {
             await _service.Insert(parcel);
-            _logger.LogInformation("Received Post request at parcel Executed {0}->{1}", (this.GetType().Name, ControllerContext.ActionDescriptor.ActionName) +parcel.ToString()); //testing purposes
+            _logger.LogInformation("Executed {0}->{1}", (this.GetType().Name, ControllerContext.ActionDescriptor.ActionName) +parcel.ToString()); //testing purposes
             return Ok();
         }
         
