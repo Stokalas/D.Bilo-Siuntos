@@ -75,6 +75,18 @@ namespace Infrastructure.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.AddColumn<double>(
+                name: "Latitude",
+                table: "Address",
+                type: "float",
+                nullable: true);
+
+            migrationBuilder.AddColumn<double>(
+                name: "Longitude",
+                table: "Address",
+                type: "float",
+                nullable: true);
+
             migrationBuilder.AddColumn<string>(
                 name: "Name",
                 table: "Address",
@@ -114,6 +126,14 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropColumn(
                 name: "LastName",
+                table: "Address");
+
+            migrationBuilder.DropColumn(
+                name: "Latitude",
+                table: "Address");
+
+            migrationBuilder.DropColumn(
+                name: "Longitude",
                 table: "Address");
 
             migrationBuilder.DropColumn(

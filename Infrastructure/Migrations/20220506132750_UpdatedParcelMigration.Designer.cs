@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220506131103_UpdatedParcelMigration")]
+    [Migration("20220506132750_UpdatedParcelMigration")]
     partial class UpdatedParcelMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,12 @@ namespace Infrastructure.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
