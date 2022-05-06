@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
+import { Paper } from '@mui/material';
 
 import { Marker } from './Marker';
 import { MapComponent } from './MapComponent';
@@ -13,6 +14,12 @@ const render = (status: Status) => {
 interface MarkerProps {
   position: google.maps.LatLng;
   label: string;
+}
+
+interface Location {
+  position: google.maps.LatLngLiteral;
+  label: string;
+  address: string;
 }
 
 const exampleParcelTerminalMarkers = [
@@ -33,13 +40,20 @@ const exampleParcelTerminalMarkers = [
   },
 ];
 
-export const GoogleMap: React.VFC = () => {
-  const [markers, setMarkers] = React.useState<MarkerProps[]>([]);
+interface GoogleMapProps {
+  zoom?: number;
+  center?: google.maps.LatLngLiteral;
+  markers?: Location[];
+  minHeight?: string;
+}
+
+export const GoogleMap: React.VFC<GoogleMapProps> = ({ zoom, center, markers, minHeight }) => {
+  const [stateMarkers, setMarkers] = React.useState<MarkerProps[]>([]);
   const [infoWindow, setInfoWindow] = React.useState<google.maps.InfoWindow>();
   const [status, setStatus] = React.useState(Status.LOADING);
 
-  const zoom = 7;
-  const center = {
+  const defaultZoom = 7;
+  const defaultCenter = {
     lat: 55,
     lng: 24,
   };
@@ -47,7 +61,7 @@ export const GoogleMap: React.VFC = () => {
   React.useEffect(() => {
     if (status === Status.SUCCESS) {
       setMarkers(
-        exampleParcelTerminalMarkers.map((x) => {
+        (markers ?? exampleParcelTerminalMarkers).map((x) => {
           return {
             label: `${x.label}, ${x.address}`,
             position: new google.maps.LatLng(x.position),
@@ -55,7 +69,7 @@ export const GoogleMap: React.VFC = () => {
         })
       );
     }
-  }, [status]);
+  }, [status, markers]);
 
   const onClick = (_: google.maps.MapMouseEvent) => {
     // example of how to add markers
@@ -68,21 +82,21 @@ export const GoogleMap: React.VFC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100%', minHeight: '600px' }}>
+    <Paper sx={{ display: 'flex', height: '100%', minHeight }}>
       <Wrapper callback={onCallBack} apiKey={apiKey} render={render}>
         <MapComponent
-          center={center}
+          center={center ?? defaultCenter}
           onClick={onClick}
-          zoom={zoom}
+          zoom={zoom ?? defaultZoom}
           infoWindow={infoWindow}
           setInfoWindow={setInfoWindow}
           style={{ flexGrow: '1', height: '100%' }}
         >
-          {markers.map((latLng, i) => (
+          {stateMarkers.map((latLng, i) => (
             <Marker key={i} position={latLng.position} name={latLng.label} />
           ))}
         </MapComponent>
       </Wrapper>
-    </div>
+    </Paper>
   );
 };
