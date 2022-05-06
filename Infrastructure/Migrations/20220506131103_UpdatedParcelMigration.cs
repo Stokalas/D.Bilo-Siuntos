@@ -12,6 +12,22 @@ namespace Infrastructure.Migrations
                 name: "FK_Parcels_Address_DeliveryAddressId",
                 table: "Parcels");
 
+            migrationBuilder.DropColumn(
+                name: "Email",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "LastName",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "Name",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "PhoneNumber",
+                table: "Users");
+
             migrationBuilder.AddColumn<int>(
                 name: "ParcelId",
                 table: "Status",
@@ -107,6 +123,34 @@ namespace Infrastructure.Migrations
             migrationBuilder.DropColumn(
                 name: "PhoneNumber",
                 table: "Address");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Email",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Name",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "PhoneNumber",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
 
             migrationBuilder.AlterColumn<int>(
                 name: "ShipperID",
