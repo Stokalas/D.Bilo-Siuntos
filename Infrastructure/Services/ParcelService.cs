@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using Infrastructure.Enums;
+using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +14,11 @@ namespace Infrastructure.DataAccess
             _dbContext = dbContext;
         }
 
-        public async Task<Parcel> GetByTrackingId(string trackingId)
+        public async Task<Parcel> GetByTrackingId(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -31,11 +32,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<IList<Parcel>> GetAllByUserId(int id)
+        public async Task<IList<Parcel>> GetAllByUserId(int shipperId)
         {
             try
             {
-                return await _dbContext.Parcels.Where(x => x.ShipperID == id).ToListAsync();
+                return await _dbContext.Parcels.Where(x => x.ShipperID == shipperId).ToListAsync();
             }
             catch
             {
@@ -72,11 +73,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<Parcel> Delete(string trackingId)
+        public async Task<Parcel> Delete(string trackingNumber)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -92,11 +93,11 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<Parcel> Update(string trackingId, Parcel updatedParcel)
+        public async Task<Parcel> Update(string trackingNumber, Parcel updatedParcel)
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingId);
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -110,6 +111,109 @@ namespace Infrastructure.DataAccess
                 _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();
                 return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Parcel> Update(int id, Parcel updatedParcel)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.Id == id);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                parcel.ShipmentDate = updatedParcel.ShipmentDate;
+                parcel.ShippingAddress = updatedParcel.ShippingAddress;
+
+                parcel.DeliveryDate = updatedParcel.DeliveryDate;
+                parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
+
+                _dbContext.Parcels.Update(parcel);
+                await _dbContext.SaveChangesAsync();
+                return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Parcel> UpdateParcelStatus(int id, Status status)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.Id == id);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                parcel.Status.Add(status);
+
+                _dbContext.Parcels.Update(parcel);
+                await _dbContext.SaveChangesAsync();
+                return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Parcel> UpdateParcelStatus(string trackingNumber, Status status)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                parcel.Status.Add(status);
+
+                _dbContext.Parcels.Update(parcel);
+                await _dbContext.SaveChangesAsync();
+                return parcel;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<IList<Status>> GetParcelStatus(string trackingNumber)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                var status = parcel.Status.ToList();
+                return status;
+            }
+            catch
+            {
+                //Log error
+                throw;
+            }
+        }
+        public async Task<Status> GetLatestParcelStatus(string trackingNumber)
+        {
+            try
+            {
+                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                if (parcel == null)
+                {
+                    return null;
+                }
+                var status = parcel.Status.OrderByDescending(x => x.Date).FirstOrDefault();
+                return status;
             }
             catch
             {

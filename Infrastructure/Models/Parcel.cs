@@ -16,5 +16,7 @@ namespace Infrastructure.Models
 
         public DateTime? DeliveryDate { get; set; }
         public Address? DeliveryAddress { get; set; }
+
+        public ICollection<Status> Status { get; set; }
     }
 }
