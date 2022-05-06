@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import InfoIcon from '@mui/icons-material/Info';
+import SendIcon from '@mui/icons-material/Send';
 import HomeIcon from '@mui/icons-material/Home';
 
 import { headerTheme, ROUTES } from 'src/resources';
@@ -28,8 +28,7 @@ export const Header: React.FC = () => {
 
   const leftRoutes = [
     { ...ROUTES.HOMEPAGE, renderIcon: () => <HomeIcon /> },
-    { ...ROUTES.ABOUT, renderIcon: () => <InfoIcon /> },
-    { ...ROUTES.CREATE_PARCEL, renderIcon: () => <InfoIcon /> },
+    { ...ROUTES.CREATE_PARCEL, renderIcon: () => <SendIcon /> },
   ];
   const rightRoutes = [{ ...ROUTES.PLACEHOLDER, renderIcon: () => <QuestionMarkIcon /> }];
 
