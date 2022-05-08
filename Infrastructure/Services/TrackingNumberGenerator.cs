@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace Infrastructure.Services
 {
@@ -16,7 +17,7 @@ namespace Infrastructure.Services
         {
             Guid g = Guid.NewGuid();
             var trackingNumber = g.ToString().Remove(0, 24);
-            _logger.LogInformation("Executed {0}->Generated new trackingNumber", this.GetType().Name);
+            _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, MethodBase.GetCurrentMethod().Name);
             return trackingNumber;
         }
     }
