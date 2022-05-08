@@ -1,6 +1,7 @@
 global using Infrastructure;
 global using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataAccess;
+using Infrastructure.Services;
 using Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ builder.Services.AddLogging(loggingBuilder =>
     });
 });
 builder.Services.AddScoped<IParcelService, ParcelService>();
+builder.Services.AddScoped<ITrackingIdGenerator, TrackingIdGenerator>();
+
 
 var app = builder.Build();
 

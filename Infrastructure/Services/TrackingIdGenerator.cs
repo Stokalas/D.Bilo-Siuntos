@@ -1,6 +1,8 @@
-﻿namespace Infrastructure.Services
+﻿using Infrastructure.Interfaces;
+
+namespace Infrastructure.Services
 {
-    public class TrackingIdGenerator
+    public class TrackingIdGenerator : ITrackingIdGenerator
     {
         public string GenerateId()
         {
