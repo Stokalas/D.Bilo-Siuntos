@@ -11,9 +11,9 @@ namespace WebAPI.Controllers
     {
         private readonly ILogger<ParcelController> _logger;
         private IParcelService _service;
-        private ITrackingIdGenerator _generator;
+        private ITrackingNumberGenerator _generator;
 
-        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITrackingIdGenerator generator)
+        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITrackingNumberGenerator generator)
         {
             _logger = logger;
             _service = service;
@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
         [HttpPost("parcel")]
         public async Task<ActionResult<Parcel>> Post(Parcel parcel)
         {
-            parcel.TrackingNumber = _generator.GenerateId();
+            parcel.TrackingNumber = _generator.GenerateNumber();
             var res = await _service.Insert(parcel);
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             return Ok(res);

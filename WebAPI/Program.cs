@@ -35,7 +35,7 @@ builder.Services.AddLogging(loggingBuilder =>
     });
 });
 builder.Services.AddScoped<IParcelService, ParcelService>();
-builder.Services.AddScoped<ITrackingIdGenerator, TrackingIdGenerator>();
+builder.Services.AddScoped<ITrackingNumberGenerator, TrackingNumberGenerator>();
 
 
 var app = builder.Build();
