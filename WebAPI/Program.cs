@@ -3,6 +3,9 @@ global using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataAccess;
 using Infrastructure.Services;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,8 +37,33 @@ builder.Services.AddLogging(loggingBuilder =>
         };
     });
 });
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = false,
+                       ValidateAudience = false,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+
+                       IssuerSigningKey = new SymmetricSecurityKey(
+                           Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JWTSecretKey"))
+                       )
+                   };
+               });
+
 builder.Services.AddScoped<IParcelService, ParcelService>();
 builder.Services.AddSingleton<ITrackingNumberGenerator, TrackingNumberGenerator>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<IAuthService>(
+              new AuthService(
+                  builder.Configuration.GetValue<string>("JWTSecretKey"),
+                  builder.Configuration.GetValue<int>("JWTLifespan")
+              )
+          );
 
 
 var app = builder.Build();
