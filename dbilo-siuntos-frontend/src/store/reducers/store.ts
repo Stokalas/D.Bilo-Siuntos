@@ -1,9 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage
 import thunk from 'redux-thunk';
+import type { StateType } from 'typesafe-actions';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import persistReducer from 'redux-persist/es/persistReducer';
 
-import { dataState } from './data';
+import { data } from './data';
+import { login } from './loginReducer';
 
 const persistConfig = {
   key: 'root',
@@ -12,13 +16,16 @@ const persistConfig = {
   blacklist: [], // elements that will not be persisted
 };
 
-const rootReducer = combineReducers({
-  data: dataState,
-});
+const rootReducer = combineReducers({ data, login });
+
+const middlewareEnhancer = applyMiddleware(thunk);
+
+const composedEnhancers = composeWithDevTools(middlewareEnhancer);
+
+// export const store = createStore(rootReducer, composedEnhancers);
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(persistedReducer, applyMiddleware(thunk));
-const persistor = persistStore(store);
-
-export { store, persistor };
+export const store = createStore(persistedReducer, composedEnhancers);
+export const persistor = persistStore(store);
+export type RootState = StateType<typeof rootReducer>;

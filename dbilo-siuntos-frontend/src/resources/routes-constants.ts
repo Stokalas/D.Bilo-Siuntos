@@ -1,7 +1,8 @@
 export const ROUTES = {
   HOMEPAGE: { url: '/', name: 'Homepage' },
   ABOUT: { url: '/about', name: 'About' },
-  PLACEHOLDER: { url: '/placeholder', name: 'Placeholder' },
+  LOGIN: { url: '/login', name: 'Login' },
+  LOGOUT: { url: '/logout', name: 'Logout' },
   CREATE_PARCEL: { url: '/send-parcel', name: 'Send Parcel' },
   PARCEL_PAGE: { url: '/parcel/:id', name: 'Parcel Page' },
 };

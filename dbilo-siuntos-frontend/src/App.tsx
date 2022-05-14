@@ -6,8 +6,11 @@ import { ThemeProvider } from '@mui/material';
 import { persistor, store } from './store/reducers/store';
 import { Router } from './components/router';
 import { theme } from './resources';
+import { refreshCookie } from './authApi';
 
 export const App: React.FC = () => {
+  refreshCookie();
+
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>

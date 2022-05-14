@@ -5,7 +5,7 @@ const initialState: ReducerData = {
   contents: [],
 };
 
-export const dataState: (state: ReducerData, action: ReduxActionData<any>) => ReducerData = (
+export const data: (state: ReducerData, action: ReduxActionData<any>) => ReducerData = (
   state = initialState,
   action: ReduxActionData<any>
 ) => {

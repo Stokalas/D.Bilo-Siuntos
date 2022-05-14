@@ -8,29 +8,40 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import SendIcon from '@mui/icons-material/Send';
 import HomeIcon from '@mui/icons-material/Home';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useSelector } from 'react-redux';
 
 import { headerTheme, ROUTES } from 'src/resources';
 import logo from '../../assets/rocket.jpg';
 import { Hamburger } from './Hamburger';
 import { NavBarButton } from './NavBarButton';
 import { handleResize } from 'src/utility';
+import { getLoginState } from 'src/store/selectors/loginSelectors';
+
+const LOGOUT_ROUTE = { ...ROUTES.LOGOUT, renderIcon: () => <LogoutIcon /> };
+const LOGIN_ROUTE = { ...ROUTES.LOGIN, renderIcon: () => <LoginIcon /> };
 
 export const Header: React.FC = () => {
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < theme.breakpoints.values['sm']);
+  const [rightRoutes, setRightRoutes] = useState([LOGIN_ROUTE]);
+  const isLogged = useSelector(getLoginState)?.isLogged;
 
   useEffect(() => {
     handleResize(theme, setIsMobile);
   }, [theme]);
 
+  useEffect(() => {
+    setRightRoutes([isLogged ? LOGOUT_ROUTE : LOGIN_ROUTE]);
+  }, [isLogged]);
+
   const leftRoutes = [
     { ...ROUTES.HOMEPAGE, renderIcon: () => <HomeIcon /> },
     { ...ROUTES.CREATE_PARCEL, renderIcon: () => <SendIcon /> },
   ];
-  const rightRoutes = [{ ...ROUTES.PLACEHOLDER, renderIcon: () => <QuestionMarkIcon /> }];
 
   return (
     <ThemeProvider theme={headerTheme}>

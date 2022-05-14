@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Infrastructure.DataAccess;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Cookies")]
     [ApiController]
     public class ParcelController : Controller
     {
@@ -21,6 +23,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("parcel/all")]
+        [Authorize(AuthenticationSchemes = "Cookies", Roles = UserRoles.Admin + "," + UserRoles.User)]
         public async Task<ActionResult<IEnumerable<Parcel>>> Get()
         {
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
@@ -45,6 +48,6 @@ namespace WebAPI.Controllers
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             return Ok(res);
         }
-        
+
     }
 }

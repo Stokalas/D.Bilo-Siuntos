@@ -22,7 +22,7 @@ namespace Infrastructure.DataAccess
                 var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                 {
-                    return null;
+                    throw new KeyNotFoundException($"User (id {id}) not found.");
                 }
                 return user;
             }

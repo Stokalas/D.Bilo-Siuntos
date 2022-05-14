@@ -16,18 +16,28 @@ const performRequest = async <TResponse>(config: ApiRequestConfig) => {
   return response.data;
 };
 
-const performGet = <TResponse>(url: string, params: ApiQueryParams = {}) =>
+const performGet = <TResponse>(
+  url: string,
+  params: ApiQueryParams = {},
+  withCredentials?: boolean
+) =>
   performRequest<TResponse>({
     method: 'get',
     params,
     url,
+    withCredentials: Boolean(withCredentials),
   });
 
-const performPost = <TResponse>(url: string, data: Record<string, unknown> = {}) =>
+const performPost = <TResponse>(
+  url: string,
+  data: Record<string, unknown> = {},
+  withCredentials?: boolean
+) =>
   performRequest<TResponse>({
     data,
     method: 'post',
     url,
+    withCredentials: Boolean(withCredentials),
   });
 
 const performPatch = <TResponse>(url: string, data: Record<string, unknown> = {}) =>

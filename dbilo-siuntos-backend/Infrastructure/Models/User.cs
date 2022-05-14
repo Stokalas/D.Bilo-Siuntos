@@ -1,12 +1,15 @@
-﻿namespace Infrastructure.Models
-{
-    public class User
-    {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public Address? Address { get; set; }
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
-        public ICollection<Parcel>? Parcels { get; set; }
-    }
+namespace Infrastructure.Models;
+
+public class User : IdentityUser<int>
+{
+    [MaxLength(50)]
+    public string FirstName { get; set; }
+    [MaxLength(50)]
+    public string LastName { get; set; }
+    public Address? Address { get; set; }
+    public ICollection<Parcel>? Parcels { get; set; }
 }
+
