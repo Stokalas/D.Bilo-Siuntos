@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
 
 namespace Infrastructure.DataAccess
 {
@@ -20,7 +22,7 @@ namespace Infrastructure.DataAccess
                 var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user == null)
                 {
-                    return null;
+                    throw new KeyNotFoundException($"User (id {id}) not found.");
                 }
                 return user;
             }
@@ -29,6 +31,18 @@ namespace Infrastructure.DataAccess
                 //Log error
                 throw;
             }
+        }
+
+
+        public async Task<User> GetSingle(Expression<Func<User, bool>> predicate)
+        {
+            return await _dbContext.Set<User>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<bool> isEmailUniq(string email)
+        {
+            var user = await this.GetSingle(u => u.Email == email);
+            return user == null;
         }
 
         public async Task<IList<User>> GetAll()

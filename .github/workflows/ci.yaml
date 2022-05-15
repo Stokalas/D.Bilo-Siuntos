@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./WebAPI
+        working-directory: ./dbilo-siuntos-backend/WebAPI
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
       - name: Build WebAPI project
         run: dotnet build
       - name: Run WebAPI tests
-        working-directory: ./WebAPI.Tests
+        working-directory: ./dbilo-siuntos-backend/WebAPI.Tests
         run: dotnet test
 
   build_react_App:

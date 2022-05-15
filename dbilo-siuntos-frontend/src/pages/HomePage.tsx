@@ -19,7 +19,7 @@ export const HomePage: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
-    api.get('parcel/all').then((response) => {
+    api.get('parcel/all', {}, true).then((response) => {
       console.log(response);
     });
   }, []);
