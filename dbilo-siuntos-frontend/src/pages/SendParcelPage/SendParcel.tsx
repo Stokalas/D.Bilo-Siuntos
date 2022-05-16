@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from '@emotion/styled';
 import { Typography, Button } from '@mui/material';
 
+import { api } from 'src/api';
 import { SendParcelForm } from './SendParcelForm';
 
 export type SendFormProps = {
@@ -10,6 +11,8 @@ export type SendFormProps = {
   setPhoneNum: Dispatch<SetStateAction<string>>;
   setEmail: Dispatch<SetStateAction<string>>;
   setAddress: Dispatch<SetStateAction<string>>;
+  setAddress2: Dispatch<SetStateAction<string>>;
+  setCity: Dispatch<SetStateAction<string>>;
   setPostalCode: Dispatch<SetStateAction<string>>;
   formType: string;
   formTitle: string;
@@ -21,6 +24,8 @@ export const SendParcel = () => {
   const [rPhoneNum, setRphoneNum] = useState('');
   const [rEmail, setRemail] = useState('');
   const [rAddress, setRaddress] = useState('');
+  const [rAddress2, setRaddress2] = useState('');
+  const [rCity, setRcity] = useState('');
   const [rPostalCode, setRpostalCode] = useState('');
 
   const [sName, setSname] = useState('');
@@ -28,10 +33,44 @@ export const SendParcel = () => {
   const [sPhoneNum, setSphoneNum] = useState('');
   const [sEmail, setSemail] = useState('');
   const [sAddress, setSaddress] = useState('');
+  const [sAddress2, setSaddress2] = useState('');
+  const [sCity, setScity] = useState('');
   const [sPostalCode, setSpostalCode] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const parcel = {
+      trackingNumber: '',
+      size: 0,
+      shippingAddress: {
+        name: sName,
+        lastName: sSurname,
+        email: sEmail,
+        phoneNumber: sPhoneNum,
+        city: sCity,
+        addressLine1: sAddress,
+        addressLine2: sAddress2,
+        postalCode: sPostalCode,
+        country: 'Lithuania',
+      },
+      deliveryAddress: {
+        name: rName,
+        lastName: rSurname,
+        email: rEmail,
+        phoneNumber: rPhoneNum,
+        city: rCity,
+        addressLine1: rAddress,
+        addressLine2: rAddress2,
+        postalCode: rPostalCode,
+        country: 'Lithuania',
+      },
+      status: [],
+    };
+
+    api.post('parcel', parcel).then((response) => {
+      console.log(response);
+    });
     console.log({
       rName,
       rSurname,
@@ -60,6 +99,8 @@ export const SendParcel = () => {
           setPhoneNum={setRphoneNum}
           setEmail={setRemail}
           setAddress={setRaddress}
+          setAddress2={setRaddress2}
+          setCity={setRcity}
           setPostalCode={setRpostalCode}
           formType="receiver"
           formTitle="Receiver"
@@ -70,6 +111,8 @@ export const SendParcel = () => {
           setPhoneNum={setSphoneNum}
           setEmail={setSemail}
           setAddress={setSaddress}
+          setAddress2={setSaddress2}
+          setCity={setScity}
           setPostalCode={setSpostalCode}
           formType="sender"
           formTitle="Sender"
