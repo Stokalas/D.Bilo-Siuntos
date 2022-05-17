@@ -18,7 +18,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                var parcel = await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -36,7 +36,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Where(x => x.ShipperID == shipperId).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Where(x => x.ShipperID == shipperId).ToListAsync();
             }
             catch
             {
@@ -49,7 +49,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).ToListAsync();
             }
             catch
             {
