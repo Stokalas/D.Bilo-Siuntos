@@ -10,6 +10,8 @@ export const SendParcelForm: React.FC<SendFormProps> = ({
   setPhoneNum,
   setEmail,
   setAddress,
+  setAddress2,
+  setCity,
   setPostalCode,
   formType,
   formTitle,
@@ -32,6 +34,14 @@ export const SendParcelForm: React.FC<SendFormProps> = ({
 
   const handleAddress = (e: ChangeEvent<HTMLInputElement>) => {
     setAddress(e.currentTarget.value);
+  };
+
+  const handleAddress2 = (e: ChangeEvent<HTMLInputElement>) => {
+    setAddress2(e.currentTarget.value);
+  };
+
+  const handleCity = (e: ChangeEvent<HTMLInputElement>) => {
+    setCity(e.currentTarget.value);
   };
 
   const handlePostalCode = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +68,12 @@ export const SendParcelForm: React.FC<SendFormProps> = ({
         label="Email"
       />
       <StyledTextField title={`${formType}Address`} onChange={handleAddress} label="Address" />
+      <StyledTextField
+        title={`${formType}Address2`}
+        onChange={handleAddress2}
+        label="Address Line 2 (optional)"
+      />
+      <StyledTextField title={`${formType}City`} onChange={handleCity} label="City" />
       <StyledTextField
         title={`${formType}PostalCode`}
         onChange={handlePostalCode}
