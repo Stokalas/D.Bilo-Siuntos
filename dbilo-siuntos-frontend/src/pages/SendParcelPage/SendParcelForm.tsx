@@ -53,28 +53,41 @@ export const SendParcelForm: React.FC<SendFormProps> = ({
       <Typography fontFamily="orbitron, sans-serif" fontSize="16px" color="primary-light">
         {formTitle}
       </Typography>
-      <StyledTextField title={`${formType}Name`} onChange={handleName} label="Name" />
-      <StyledTextField title={`${formType}Surname`} onChange={handleSurname} label="Surname" />
+      <StyledTextField required title={`${formType}Name`} onChange={handleName} label="Name" />
       <StyledTextField
+        required
+        title={`${formType}Surname`}
+        onChange={handleSurname}
+        label="Surname"
+      />
+      <StyledTextField
+        required
         type="tel"
         title={`${formType}PhoneNumber`}
         onChange={handlePhoneNum}
         label="Phone Number"
       />
       <StyledTextField
+        required
         type="email"
         title={`${formType}Email`}
         onChange={handleEmail}
         label="Email"
       />
-      <StyledTextField title={`${formType}Address`} onChange={handleAddress} label="Address" />
+      <StyledTextField
+        required
+        title={`${formType}Address`}
+        onChange={handleAddress}
+        label="Address"
+      />
       <StyledTextField
         title={`${formType}Address2`}
         onChange={handleAddress2}
         label="Address Line 2 (optional)"
       />
-      <StyledTextField title={`${formType}City`} onChange={handleCity} label="City" />
+      <StyledTextField required title={`${formType}City`} onChange={handleCity} label="City" />
       <StyledTextField
+        required
         title={`${formType}PostalCode`}
         onChange={handlePostalCode}
         label="Postal Code"

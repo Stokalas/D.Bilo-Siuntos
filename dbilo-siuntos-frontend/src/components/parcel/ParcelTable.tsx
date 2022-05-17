@@ -27,6 +27,26 @@ interface ParcelTableProps {
 }
 
 export const ParcelTable: React.FC<ParcelTableProps> = ({ parcel }) => {
+  const delTemp = parcel.deliveryAddress;
+  const shipTemp = parcel.shippingAddress;
+  const deliveryAddress =
+    delTemp?.addressLine1 +
+    ' ' +
+    delTemp?.addressLine2 +
+    ', ' +
+    delTemp?.city +
+    ', ' +
+    delTemp?.postalCode;
+
+  const shippingAddress =
+    shipTemp?.addressLine1 +
+    ' ' +
+    shipTemp?.addressLine2 +
+    ', ' +
+    shipTemp?.city +
+    ', ' +
+    shipTemp?.postalCode;
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="parcel table">
@@ -34,9 +54,9 @@ export const ParcelTable: React.FC<ParcelTableProps> = ({ parcel }) => {
           {createParcelRow('status', 'Parcel Status', 'Mock Status')}
           {createParcelRow('trackingNumber', 'Tracking Number', parcel.trackingNumber)}
           {createParcelRow('size', 'Size', ParcelSize[parcel.size])}
-          {createParcelRow('currentLocation', 'Shipping Address', 'Mock Address')}
+          {createParcelRow('currentLocation', 'Shipping Address', shippingAddress)}
           {createParcelRow('currentLocation', 'Current Location', 'Mock Address')}
-          {createParcelRow('currentLocation', 'Delivery Address', 'Mock Address')}
+          {createParcelRow('currentLocation', 'Delivery Address', deliveryAddress)}
         </TableBody>
       </Table>
     </TableContainer>

@@ -23,9 +23,9 @@ export const TrackParcel: React.FC = () => {
     setLoading(true);
     // TODO - fix endpoint once get by tracking number is available
     try {
-      const response = await api.get<Array<Parcel>>(`parcel/${trackingNumber}`);
-      if (response.length !== 0) {
-        navigate(`/parcel/${response[0]!.id}`, { state: { parcel: response[0] } });
+      const response = await api.get<Parcel>(`parcel/${trackingNumber}`);
+      if (response !== null || response !== undefined) {
+        navigate(`/parcel/${response!.trackingNumber}`, { state: { parcel: response } });
       } else {
         setError(true);
       }
