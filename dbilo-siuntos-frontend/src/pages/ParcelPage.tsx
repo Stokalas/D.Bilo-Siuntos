@@ -18,7 +18,7 @@ export const ParcelPage: React.FC = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { id } = useParams();
+  const { trackingNumber } = useParams();
   const { state }: { state: any } = useLocation();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const ParcelPage: React.FC = () => {
       } else {
         setLoading(true);
         try {
-          const response = await api.get<Array<Parcel>>(`parcel/${id}`);
+          const response = await api.get<Array<Parcel>>(`parcel/${trackingNumber}`);
           if (response.length !== 0) {
             setError(false);
             setParcel(response[0]);
@@ -45,7 +45,7 @@ export const ParcelPage: React.FC = () => {
     };
 
     fetchData();
-  }, [state?.parcel, id]);
+  }, [state?.parcel, trackingNumber]);
 
   return (
     <Container maxWidth="lg">
@@ -56,7 +56,7 @@ export const ParcelPage: React.FC = () => {
             borderBottom="1px solid lightgrey"
             fontSize="32px"
           >
-            Tracking (Tracking number: {id})
+            Parcel Tracking
           </Typography>
         </Grid>
         {parcel && (
@@ -77,7 +77,7 @@ export const ParcelPage: React.FC = () => {
           <Typography fontSize="20px">
             {error &&
               !loading &&
-              `Failed to load parcel with tracking number ${id} or no such parcel exists`}
+              `Failed to load parcel with tracking number ${trackingNumber} or no such parcel exists`}
             {loading && 'Loading'}
           </Typography>
         </Grid>

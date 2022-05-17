@@ -1,6 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from '@emotion/styled';
-import { Typography, Button } from '@mui/material';
+import {
+  Typography,
+  Button,
+  Select,
+  SelectChangeEvent,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 
 import { api } from 'src/api';
 import { SendParcelForm } from './SendParcelForm';
@@ -41,6 +49,12 @@ export const SendParcel = () => {
   const [sCity, setScity] = useState('');
   const [sPostalCode, setSpostalCode] = useState('');
 
+  const [size, setSize] = useState('0');
+
+  const handleSizeChange = (event: SelectChangeEvent) => {
+    setSize(event.target.value as string);
+  };
+
   // const isLogged = useSelector(getLoginState)?.user;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +73,7 @@ export const SendParcel = () => {
 
     const parcel = {
       trackingNumber: '',
-      size: 0,
+      size: size,
       shippingAddress: {
         name: sName,
         lastName: sSurname,
@@ -99,30 +113,41 @@ export const SendParcel = () => {
         Register Parcel
       </Typography>
       <FormWrapper id="parcelForm" onSubmit={handleSubmit}>
-        <SendParcelForm
-          setName={setRname}
-          setSurname={setRsurname}
-          setPhoneNum={setRphoneNum}
-          setEmail={setRemail}
-          setAddress={setRaddress}
-          setAddress2={setRaddress2}
-          setCity={setRcity}
-          setPostalCode={setRpostalCode}
-          formType="receiver"
-          formTitle="Receiver"
-        />
-        <SendParcelForm
-          setName={setSname}
-          setSurname={setSsurname}
-          setPhoneNum={setSphoneNum}
-          setEmail={setSemail}
-          setAddress={setSaddress}
-          setAddress2={setSaddress2}
-          setCity={setScity}
-          setPostalCode={setSpostalCode}
-          formType="sender"
-          formTitle="Sender"
-        />
+        <FormFlex>
+          <SendParcelForm
+            setName={setRname}
+            setSurname={setRsurname}
+            setPhoneNum={setRphoneNum}
+            setEmail={setRemail}
+            setAddress={setRaddress}
+            setAddress2={setRaddress2}
+            setCity={setRcity}
+            setPostalCode={setRpostalCode}
+            formType="receiver"
+            formTitle="Receiver"
+          />
+          <SendParcelForm
+            setName={setSname}
+            setSurname={setSsurname}
+            setPhoneNum={setSphoneNum}
+            setEmail={setSemail}
+            setAddress={setSaddress}
+            setAddress2={setSaddress2}
+            setCity={setScity}
+            setPostalCode={setSpostalCode}
+            formType="sender"
+            formTitle="Sender"
+          />
+        </FormFlex>
+        <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }} size="small">
+          <InputLabel id="size-select">Size</InputLabel>
+          <Select id="size-select" value={size} label="Size" onChange={handleSizeChange}>
+            <MenuItem value={0}>S (up to 8cm x 8cm x 8cm)</MenuItem>
+            <MenuItem value={1}>M (up to 18cm x 18cm x 18cm)</MenuItem>
+            <MenuItem value={2}>L (up to 40cm x 40cm x 40cm)</MenuItem>
+            <MenuItem value={3}>XL</MenuItem>
+          </Select>
+        </FormControl>
       </FormWrapper>
       <Button variant="contained" type="submit" form="parcelForm">
         Send
@@ -137,9 +162,12 @@ const Wrapper = styled.div`
 `;
 
 const FormWrapper = styled.form`
+  margin: 20px 0;
+`;
+
+const FormFlex = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 50px;
-  margin: 20px 0;
 `;
