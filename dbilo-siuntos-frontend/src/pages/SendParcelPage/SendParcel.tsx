@@ -4,6 +4,10 @@ import { Typography, Button } from '@mui/material';
 
 import { api } from 'src/api';
 import { SendParcelForm } from './SendParcelForm';
+import { geocode } from 'src/utility';
+
+// import { useSelector } from 'react-redux';
+// import { getLoginState } from 'src/store/selectors/loginSelectors';
 
 export type SendFormProps = {
   setName: Dispatch<SetStateAction<string>>;
@@ -37,8 +41,21 @@ export const SendParcel = () => {
   const [sCity, setScity] = useState('');
   const [sPostalCode, setSpostalCode] = useState('');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // const isLogged = useSelector(getLoginState)?.user;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    let lat = 0;
+    let lng = 0;
+    await geocode(rAddress + ', ' + rCity + ' ' + rPostalCode).then((res) => {
+      try {
+        lat = res[0].geometry.location.lat();
+        lng = res[0].geometry.location.lng();
+      } catch (e) {
+        console.log(e);
+      }
+    });
 
     const parcel = {
       trackingNumber: '',
@@ -64,6 +81,8 @@ export const SendParcel = () => {
         addressLine2: rAddress2,
         postalCode: rPostalCode,
         country: 'Lithuania',
+        latitude: lat,
+        longitude: lng,
       },
       status: [],
     };
@@ -71,20 +90,7 @@ export const SendParcel = () => {
     api.post('parcel', parcel).then((response) => {
       console.log(response);
     });
-    console.log({
-      rName,
-      rSurname,
-      rPhoneNum,
-      rAddress,
-      rEmail,
-      rPostalCode,
-      sName,
-      sSurname,
-      sPhoneNum,
-      sAddress,
-      sEmail,
-      sPostalCode,
-    });
+    console.log(parcel);
   };
 
   return (
