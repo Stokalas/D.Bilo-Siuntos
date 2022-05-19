@@ -12,6 +12,7 @@ import SendIcon from '@mui/icons-material/Send';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { useSelector } from 'react-redux';
 
 import { headerTheme, ROUTES } from 'src/resources';
@@ -21,13 +22,16 @@ import { NavBarButton } from './NavBarButton';
 import { handleResize } from 'src/utility';
 import { getLoginState } from 'src/store/selectors/loginSelectors';
 
-const LOGOUT_ROUTE = { ...ROUTES.LOGOUT, renderIcon: () => <LogoutIcon /> };
-const LOGIN_ROUTE = { ...ROUTES.LOGIN, renderIcon: () => <LoginIcon /> };
+const LOGOUT_ROUTES = [{ ...ROUTES.LOGOUT, renderIcon: () => <LogoutIcon /> }];
+const UNLOGGED_ROUTES = [
+  { ...ROUTES.LOGIN, renderIcon: () => <LoginIcon /> },
+  { ...ROUTES.REGISTER, renderIcon: () => <VpnKeyIcon /> },
+];
 
 export const Header: React.FC = () => {
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < theme.breakpoints.values['sm']);
-  const [rightRoutes, setRightRoutes] = useState([LOGIN_ROUTE]);
+  const [rightRoutes, setRightRoutes] = useState(UNLOGGED_ROUTES);
   const isLogged = useSelector(getLoginState)?.isLogged;
 
   useEffect(() => {
@@ -35,7 +39,7 @@ export const Header: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
-    setRightRoutes([isLogged ? LOGOUT_ROUTE : LOGIN_ROUTE]);
+    setRightRoutes(isLogged ? LOGOUT_ROUTES : UNLOGGED_ROUTES);
   }, [isLogged]);
 
   const leftRoutes = [
