@@ -8,6 +8,7 @@ public class LoginRequest
     public string Email { get; set; }
     [Required]
     public string Password { get; set; }
-    public bool? Remember { get; set; }
+    [Required]
+    public bool Remember { get; set; }
 }
 
