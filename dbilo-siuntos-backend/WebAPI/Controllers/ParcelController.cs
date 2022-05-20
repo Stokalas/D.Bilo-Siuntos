@@ -49,5 +49,35 @@ namespace WebAPI.Controllers
             return Ok(res);
         }
 
+        [HttpPut("parcel/{trackingNumber}")]
+        public async Task<ActionResult<Parcel>> UpdateParcel(string trackingNumber, Parcel parcel)
+        {
+            try
+            {
+                if (trackingNumber != parcel.TrackingNumber)
+                {
+                    _logger.LogError("Parcel trackingNumber mismatch");
+                    return BadRequest("Parcel trackingNumber mismatch");
+                }
+                    
+
+                var parcel_to_update = await _service.GetByTrackingId(trackingNumber);
+
+                if (parcel_to_update == null)
+                {
+                    _logger.LogWarning($"Parcel with trackingNumber = {trackingNumber} not found");
+                    return NotFound($"Parcel with trackingNumber = {trackingNumber} not found");
+                }
+                parcel_to_update.DeliveryAddress = parcel_to_update.ShippingAddress;
+                return await _service.Update(trackingNumber, parcel_to_update);
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Error updating Parcel");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error updating data");
+            }
+        }
+
     }
 }
