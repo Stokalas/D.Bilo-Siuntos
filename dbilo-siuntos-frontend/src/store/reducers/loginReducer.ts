@@ -28,8 +28,7 @@ const initialState: LoginState = {
   },
 };
 
-export const login = (state: LoginState = initialState, action: LoginAction): LoginState => {
-  console.log(action.type);
+export const loginReducer = (state: LoginState = initialState, action: LoginAction): LoginState => {
   switch (action.type) {
     case actionTypes.LOGIN:
       return {
@@ -42,7 +41,6 @@ export const login = (state: LoginState = initialState, action: LoginAction): Lo
         isLogged: true,
       };
     case actionTypes.LOGOUT:
-      console.log('hey');
       return initialState;
     default:
       return state;

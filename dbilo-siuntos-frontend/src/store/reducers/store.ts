@@ -6,17 +6,17 @@ import type { StateType } from 'typesafe-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import persistReducer from 'redux-persist/es/persistReducer';
 
-import { data } from './data';
-import { login } from './loginReducer';
+import { loginReducer as login } from './loginReducer';
+import { notificationsReducer as notifications } from './notificationsReducer';
 
 const persistConfig = {
   key: 'root',
   storage: storage,
-  whitelist: ['data'], // elements that will be persisted
-  blacklist: [], // elements that will not be persisted
+  whitelist: [], // elements that will be persisted
+  blacklist: [], // elements that will not be persisted, e.g. 'login', 'notifications'
 };
 
-const rootReducer = combineReducers({ data, login });
+const rootReducer = combineReducers({ login, notifications });
 
 const middlewareEnhancer = applyMiddleware(thunk);
 
