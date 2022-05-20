@@ -1,23 +1,21 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
+import { useDispatch } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
 
-import { persistor, store } from './store/reducers/store';
 import { Router } from './components/router';
 import { theme } from './resources';
-import { refreshCookie } from './authApi';
+import { onStart, refreshCookie } from './authApi';
+import { Notification } from './pages/Notifications';
 
 export const App: React.FC = () => {
+  const dispatch = useDispatch();
+  dispatch(onStart());
   refreshCookie();
 
   return (
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Router />
-        </PersistGate>
-      </Provider>
+      <Router />
+      <Notification />
     </ThemeProvider>
   );
 };

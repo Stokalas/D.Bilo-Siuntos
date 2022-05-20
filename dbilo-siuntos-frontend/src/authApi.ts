@@ -7,22 +7,22 @@ import {
   loginDetailsType,
   registerDetailsType,
 } from './store/actions/loginActions';
-// import { SetNotificationAction } from '../state/actions/notificationsActions';
+import { SetNotificationAction } from './store/actions/notificationsActions';
 
 export const register = (data: registerDetailsType, navigate: NavigateFunction) => {
-  return () => {
+  return (dispatch: any) => {
     api
       .post('auth/register', data)
-      .then((response) => {
+      .then((response: any) => {
         console.log(response);
-        // dispatch(SetNotificationAction({ isOpen: true, message: response.data, type: 'success' }));
+        dispatch(SetNotificationAction({ isOpen: true, message: response.data, type: 'success' }));
         navigate('/login');
       })
       .catch((error) => {
         console.log(error);
-        // dispatch(
-        //   SetNotificationAction({ isOpen: true, message: error.response.data, type: 'error' })
-        // );
+        dispatch(
+          SetNotificationAction({ isOpen: true, message: error.response.data, type: 'error' })
+        );
       });
   };
 };
@@ -34,14 +34,20 @@ export const login = (details: loginDetailsType, navigate: NavigateFunction) => 
       .then((response: any) => {
         console.log(response);
         dispatch(setLoginState({ ...response.data, email: details.email }));
-
+        dispatch(
+          SetNotificationAction({
+            isOpen: true,
+            message: 'Logged in successfully',
+            type: 'success',
+          })
+        );
         navigate('/');
       })
       .catch((error) => {
         console.log(error);
-        // dispatch(
-        //   SetNotificationAction({ isOpen: true, message: error.response.data, type: 'error' })
-        // );
+        dispatch(
+          SetNotificationAction({ isOpen: true, message: error.response.data, type: 'error' })
+        );
       });
   };
 };
@@ -50,25 +56,29 @@ export const logout = (navigate: NavigateFunction) => {
   return (dispatch: any) => {
     return api.post('auth/logout', {}, true).then(() => {
       dispatch(logoutAction());
+      dispatch(
+        SetNotificationAction({ isOpen: true, message: 'Logged out successfully', type: 'success' })
+      );
       navigate('/');
     });
   };
 };
 
-// export const onStart = () => {
-//   return (dispatch) => {
-//     cookieRequest().then((data) => {
-//       if (data !== 'noCookie') {
-//         dispatch(setLoginState({ ...data }));
-//       } else {
-//         dispatch(logoutAction);
-//       }
-//     });
-//   };
-// };
+export const onStart = () => {
+  return (dispatch: any) => {
+    cookieRequest().then((data) => {
+      if (data !== 'noCookie') {
+        console.log('logging in');
+        dispatch(setLoginState({ ...data }));
+      } else {
+        dispatch(logoutAction());
+      }
+    });
+  };
+};
 
 export const cookieRequest = () => {
-  return api.post('auth/newcookie', {}, true).then((response: any) => response.data);
+  return api.post('auth/newcookie', {}, true).then((response: any) => response);
 };
 
 export const refreshCookie = () => {
