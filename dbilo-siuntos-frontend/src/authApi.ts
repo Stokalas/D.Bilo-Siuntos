@@ -1,20 +1,22 @@
-// import { history } from '../components/Routes/PageRouter';
 import { NavigateFunction } from 'react-router-dom';
 
 import { api } from './api';
-import { setLoginState, logoutAction } from './store/actions/loginActions';
-// import { RegisterFormData } from '../components/RegisterForm/RegisterForm';
-// import { setLoginState, loginDetailsType, logoutAction } from '../state/actions/loginActions';
+import {
+  setLoginState,
+  logoutAction,
+  loginDetailsType,
+  registerDetailsType,
+} from './store/actions/loginActions';
 // import { SetNotificationAction } from '../state/actions/notificationsActions';
 
-export const register = (data: any) => {
+export const register = (data: registerDetailsType, navigate: NavigateFunction) => {
   return () => {
     api
       .post('auth/register', data)
       .then((response) => {
-        // history.push('/login');
         console.log(response);
         // dispatch(SetNotificationAction({ isOpen: true, message: response.data, type: 'success' }));
+        navigate('/login');
       })
       .catch((error) => {
         console.log(error);
@@ -25,8 +27,7 @@ export const register = (data: any) => {
   };
 };
 
-// export const login = (details: loginDetailsType) => {
-export const login = (details: any, navigate: NavigateFunction) => {
+export const login = (details: loginDetailsType, navigate: NavigateFunction) => {
   return (dispatch: any) => {
     return api
       .post('auth/login', details, true)
@@ -34,9 +35,7 @@ export const login = (details: any, navigate: NavigateFunction) => {
         console.log(response);
         dispatch(setLoginState({ ...response.data, email: details.email }));
 
-        // const navigate = useNavigate();
         navigate('/');
-        // history.push('/');
       })
       .catch((error) => {
         console.log(error);

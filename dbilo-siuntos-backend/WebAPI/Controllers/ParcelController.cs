@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Cookies")]
     [ApiController]
     public class ParcelController : Controller
     {
