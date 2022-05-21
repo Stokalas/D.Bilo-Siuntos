@@ -70,12 +70,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TerminalId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TerminalId");
 
                     b.ToTable("Address");
                 });
@@ -407,15 +402,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Address", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Terminal", "Terminal")
-                        .WithMany()
-                        .HasForeignKey("TerminalId");
-
-                    b.Navigation("Terminal");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>

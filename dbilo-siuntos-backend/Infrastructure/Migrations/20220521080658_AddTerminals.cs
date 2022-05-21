@@ -14,12 +14,6 @@ namespace Infrastructure.Migrations
                 type: "int",
                 nullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "TerminalId",
-                table: "Address",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "Terminals",
                 columns: table => new
@@ -45,18 +39,6 @@ namespace Infrastructure.Migrations
                 table: "Parcels",
                 column: "TerminalId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Address_TerminalId",
-                table: "Address",
-                column: "TerminalId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Address_Terminals_TerminalId",
-                table: "Address",
-                column: "TerminalId",
-                principalTable: "Terminals",
-                principalColumn: "Id");
-
             migrationBuilder.AddForeignKey(
                 name: "FK_Parcels_Terminals_TerminalId",
                 table: "Parcels",
@@ -68,10 +50,6 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Address_Terminals_TerminalId",
-                table: "Address");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Parcels_Terminals_TerminalId",
                 table: "Parcels");
 
@@ -82,17 +60,9 @@ namespace Infrastructure.Migrations
                 name: "IX_Parcels_TerminalId",
                 table: "Parcels");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Address_TerminalId",
-                table: "Address");
-
             migrationBuilder.DropColumn(
                 name: "TerminalId",
                 table: "Parcels");
-
-            migrationBuilder.DropColumn(
-                name: "TerminalId",
-                table: "Address");
         }
     }
 }

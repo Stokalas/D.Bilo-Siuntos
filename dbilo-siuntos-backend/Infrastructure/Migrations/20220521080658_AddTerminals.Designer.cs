@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220521075332_AddTerminals")]
+    [Migration("20220521080658_AddTerminals")]
     partial class AddTerminals
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,12 +72,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TerminalId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TerminalId");
 
                     b.ToTable("Address");
                 });
@@ -409,15 +404,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Address", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Terminal", "Terminal")
-                        .WithMany()
-                        .HasForeignKey("TerminalId");
-
-                    b.Navigation("Terminal");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
