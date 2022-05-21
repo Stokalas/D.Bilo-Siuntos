@@ -18,7 +18,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                var parcel = await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                var parcel = await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -36,7 +36,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Where(x => x.ShipperID == shipperId).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).Where(x => x.ShipperID == shipperId).ToListAsync();
             }
             catch
             {
@@ -49,7 +49,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).ToListAsync();
             }
             catch
             {
@@ -108,6 +108,8 @@ namespace Infrastructure.DataAccess
                 parcel.DeliveryDate = updatedParcel.DeliveryDate;
                 parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
 
+                parcel.Terminal = updatedParcel.Terminal;
+
                 _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();
                 return parcel;
@@ -132,6 +134,8 @@ namespace Infrastructure.DataAccess
 
                 parcel.DeliveryDate = updatedParcel.DeliveryDate;
                 parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
+
+                parcel.Terminal = updatedParcel.Terminal;
 
                 _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();

@@ -9,5 +9,6 @@ namespace Infrastructure
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
         public DbSet<Parcel> Parcels { get; set; }
+        public DbSet<Terminal> Terminals { get; set; }
     }
 }

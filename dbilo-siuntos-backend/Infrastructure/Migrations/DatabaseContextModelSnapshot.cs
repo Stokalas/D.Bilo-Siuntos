@@ -101,6 +101,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TerminalId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
@@ -109,6 +112,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("DeliveryAddressId");
 
                     b.HasIndex("ShippingAddressId");
+
+                    b.HasIndex("TerminalId");
 
                     b.HasIndex("UserId");
 
@@ -140,6 +145,47 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ParcelTrackingNumber");
 
                     b.ToTable("Status");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Terminals");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>
@@ -370,6 +416,10 @@ namespace Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ShippingAddressId");
 
+                    b.HasOne("Infrastructure.Models.Terminal", "Terminal")
+                        .WithMany("Parcels")
+                        .HasForeignKey("TerminalId");
+
                     b.HasOne("Infrastructure.Models.User", null)
                         .WithMany("Parcels")
                         .HasForeignKey("UserId");
@@ -377,6 +427,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("DeliveryAddress");
 
                     b.Navigation("ShippingAddress");
+
+                    b.Navigation("Terminal");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Status", b =>
@@ -451,6 +503,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
                 {
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
+                {
+                    b.Navigation("Parcels");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>
