@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220521072525_AddTerminals")]
+    [Migration("20220521075332_AddTerminals")]
     partial class AddTerminals
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,9 +77,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TerminalId")
-                        .IsUnique()
-                        .HasFilter("[TerminalId] IS NOT NULL");
+                    b.HasIndex("TerminalId");
 
                     b.ToTable("Address");
                 });
@@ -164,7 +162,31 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -392,8 +414,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Models.Address", b =>
                 {
                     b.HasOne("Infrastructure.Models.Terminal", "Terminal")
-                        .WithOne("Address")
-                        .HasForeignKey("Infrastructure.Models.Address", "TerminalId");
+                        .WithMany()
+                        .HasForeignKey("TerminalId");
 
                     b.Navigation("Terminal");
                 });
@@ -501,9 +523,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
-
                     b.Navigation("Parcels");
                 });
 
