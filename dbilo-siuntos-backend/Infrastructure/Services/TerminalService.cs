@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
-    public class TerminalService
+    public class TerminalService : ITerminalService
     {
         private readonly DatabaseContext _dbContext;
 
