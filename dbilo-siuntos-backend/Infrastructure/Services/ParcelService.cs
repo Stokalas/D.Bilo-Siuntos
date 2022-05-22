@@ -36,7 +36,7 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Where(x => x.ShipperID == shipperId).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Where(x => x.Shipper.Id == shipperId).ToListAsync();
             }
             catch
             {

@@ -14,7 +14,6 @@ export const register = (data: registerDetailsType, navigate: NavigateFunction) 
     api
       .post('auth/register', data)
       .then((response: any) => {
-        console.log(response);
         dispatch(SetNotificationAction({ isOpen: true, message: response.data, type: 'success' }));
         navigate('/login');
       })
@@ -32,7 +31,6 @@ export const login = (details: loginDetailsType, navigate: NavigateFunction) => 
     return api
       .post('auth/login', details, true)
       .then((response: any) => {
-        console.log(response);
         dispatch(setLoginState({ ...response.data, email: details.email }));
         dispatch(
           SetNotificationAction({
@@ -68,7 +66,6 @@ export const onStart = () => {
   return (dispatch: any) => {
     cookieRequest().then((data) => {
       if (data !== 'noCookie') {
-        console.log('logging in');
         dispatch(setLoginState({ ...data }));
       } else {
         dispatch(logoutAction());

@@ -57,11 +57,24 @@ export const SendParcel = () => {
 
   // const isLogged = useSelector(getLoginState)?.user;
 
+  //Send works, but now need to handle response
+
+  // Login to view all your siuntos?
+
+  //Future todos
+  //Track current location?
+  //For now manually set in db for show purposes?
+  //What kind of statuses could there be?
+  //Booked, Collected From Shipper / Travelling, Ready TO be collected, Collected
+
+  //I suppose we should select - do you want courier to come and collect or do you want to send from terminal post
+  // We should give some sort of mock confirmation that a user could "print"
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    let lat = 0;
-    let lng = 0;
+    let lat = null;
+    let lng = null;
     await geocode(rAddress + ', ' + rCity + ' ' + rPostalCode).then((res) => {
       try {
         lat = res[0].geometry.location.lat();
@@ -72,8 +85,7 @@ export const SendParcel = () => {
     });
 
     const parcel = {
-      trackingNumber: '',
-      size: size,
+      size: Number(size),
       shippingAddress: {
         name: sName,
         lastName: sSurname,

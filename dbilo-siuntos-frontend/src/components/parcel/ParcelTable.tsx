@@ -54,9 +54,9 @@ export const ParcelTable: React.FC<ParcelTableProps> = ({ parcel }) => {
           {createParcelRow('status', 'Parcel Status', 'Mock Status')}
           {createParcelRow('trackingNumber', 'Tracking Number', parcel.trackingNumber)}
           {createParcelRow('size', 'Size', ParcelSize[parcel.size])}
-          {createParcelRow('currentLocation', 'Shipping Address', shippingAddress)}
+          {createParcelRow('shippingAddress', 'Shipping Address', shippingAddress)}
           {createParcelRow('currentLocation', 'Current Location', 'Mock Address')}
-          {createParcelRow('currentLocation', 'Delivery Address', deliveryAddress)}
+          {createParcelRow('deliveryAddress', 'Delivery Address', deliveryAddress)}
         </TableBody>
       </Table>
     </TableContainer>

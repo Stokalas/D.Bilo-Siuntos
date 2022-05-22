@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.DataAccess;
 using Infrastructure.Interfaces;
+using Infrastructure.Contracts.Parcels;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 
@@ -40,8 +41,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("parcel")]
-        public async Task<ActionResult<Parcel>> Post(Parcel parcel)
+        public async Task<ActionResult<Parcel>> Post(PostParcelRequest request)
         {
+            var parcel = PostParcelRequest.GetParcel(request);
             parcel.TrackingNumber = _generator.GenerateNumber();
             var res = await _service.Insert(parcel);
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes

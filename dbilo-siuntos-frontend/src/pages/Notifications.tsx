@@ -8,7 +8,6 @@ import { getNotificationsState } from 'src/store/selectors/notificationsSelector
 export const Notification = () => {
   const dispatch = useDispatch();
   const { message, type, isOpen } = useSelector(getNotificationsState);
-  console.log(isOpen);
 
   const handleClose = (reason: any) => {
     if (reason === 'clickaway') {
