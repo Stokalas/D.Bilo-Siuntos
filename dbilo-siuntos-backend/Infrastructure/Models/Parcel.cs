@@ -18,5 +18,7 @@ namespace Infrastructure.Models
         public Address DeliveryAddress { get; set; }
 
         public ICollection<Status> Status { get; set; }
+
+        public Terminal? Terminal { get; set; }
     }
 }

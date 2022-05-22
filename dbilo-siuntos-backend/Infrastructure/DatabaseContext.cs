@@ -11,6 +11,7 @@ namespace Infrastructure
         public DbSet<Parcel> Parcels { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<Terminal> Terminals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
