@@ -82,7 +82,8 @@ builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<Secrets>(new Secrets()
 {
     Id = builder.Configuration["id"],
-    Secret = builder.Configuration["pass"]
+    Secret = builder.Configuration["pass"],
+    Email = builder.Configuration["Emailing"]
 });
 builder.Services.AddScoped<IUserService, UserService>();
 

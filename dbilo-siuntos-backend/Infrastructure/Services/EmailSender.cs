@@ -25,7 +25,8 @@ namespace Infrastructure.Services
             _logger = logger;
             _secrets = secrets;
         }
-        public async void SendEmail(Address data, string tracking, bool isReceiver)
+
+        public async void SendReceiver(Address data, string tracking)
         {
             try
             {
@@ -52,20 +53,11 @@ namespace Infrastructure.Services
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(fromMail));
                 email.To.Add(MailboxAddress.Parse(data.Email));
-                if (isReceiver)
-                {
-                    string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you will soon receive your parcel to {data.AddressLine1}!<br> Here is tracking number to check where it is now: <br><strong>";
-                    mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
-                    email.Subject = "You are about to get your parcel";
-                    email.Body = new TextPart(TextFormat.Html) { Text = mailbody };
-                }
-                else
-                {
-                    string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you shipped your parcel successfully! Here is tracking number: <br><strong>";
-                    mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
-                    email.Subject = "Shipped successfully!";
-                    email.Body = new TextPart(TextFormat.Html) { Text = mailbody };
-                }
+
+                string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you will soon receive your parcel to {data.AddressLine1}!<br> Here is tracking number to check where it is now: <br><strong>";
+                mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
+                email.Subject = "You are about to get your parcel";
+                email.Body = new TextPart(TextFormat.Html) { Text = mailbody };
                 
 
                 using (var client = new SmtpClient())
@@ -82,30 +74,56 @@ namespace Infrastructure.Services
             {
                 _logger.LogWarning("Could not send the message");
             }
-            /*
+        }
 
-
-            string from = "sprendimai.programoms@gmail.com"; //From address    
-            MailMessage message = new MailMessage(from, data.Email);
-            
-
-            message.BodyEncoding = Encoding.UTF8;
-            message.IsBodyHtml = true;
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp
-            client.UseDefaultCredentials = false;
-            System.Net.NetworkCredential basicCredential1 = new
-            System.Net.NetworkCredential("sprendimai.programoms@gmail.com", "SprendimaiProgramoms123");
-            client.EnableSsl = true;
-            client.Credentials = basicCredential1;
+        public async void SendSender(Address data, string tracking)
+        {
             try
             {
-                client.Send(message);
-            }
+                string clientId = _secrets.Id;
+                string clientSecret = _secrets.Secret;
+                string fromMail = _secrets.Email;
+                string[] scopes = new string[] { "https://mail.google.com/" };
+                ClientSecrets clientSecrets = new()
+                {
+                    ClientId = clientId,
+                    ClientSecret = clientSecret
+                };
+                //Requesting authorization
+                UserCredential userCredential = GoogleWebAuthorizationBroker.AuthorizeAsync(clientSecrets, scopes, "user", CancellationToken.None).Result;
+                //Authorization granted or not required (if the saved access token already available)
+                if (userCredential.Token.IsExpired(userCredential.Flow.Clock))
+                {
+                    //The access token has expired, refreshing it
+                    if (!userCredential.RefreshTokenAsync(CancellationToken.None).Result)
+                    {
+                        _logger.LogWarning("The access token has expired!");
+                    }
+                }
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse(fromMail));
+                email.To.Add(MailboxAddress.Parse(data.Email));
 
-            catch (Exception)
+                string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you shipped your parcel successfully! Here is tracking number: <br><strong>";
+                mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
+                email.Subject = "Shipped successfully!";
+                email.Body = new TextPart(TextFormat.Html) { Text = mailbody };
+
+
+                using (var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    var oauth2 = new SaslMechanismOAuth2(fromMail, userCredential.Token.AccessToken);
+                    client.Authenticate(oauth2);
+
+                    await client.SendAsync(email);
+                    client.Disconnect(true);
+                }
+            }
+            catch (Exception ex)
             {
-                _logger.LogWarning("Failed sending email!");
-            }*/
+                _logger.LogWarning("Could not send the message");
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Infrastructure.Interfaces
 {
     public interface IEmailSender
     {
-        public void SendEmail(Address data, string tracking, bool isReceiver);
+        public void SendSender(Address data, string tracking);
+        public void SendReceiver(Address data, string tracking);
     }
 }

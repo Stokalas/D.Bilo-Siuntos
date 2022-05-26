@@ -46,8 +46,8 @@ namespace WebAPI.Controllers
         {
             parcel.TrackingNumber = _generator.GenerateNumber();
             var res = await _service.Insert(parcel);
-            _emailSender.SendEmail(parcel.ShippingAddress, parcel.TrackingNumber, false);
-            _emailSender.SendEmail(parcel.DeliveryAddress, parcel.TrackingNumber, true);
+            _emailSender.SendSender(parcel.ShippingAddress, parcel.TrackingNumber);
+            _emailSender.SendReceiver(parcel.DeliveryAddress, parcel.TrackingNumber);
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             return Ok(res);
         }
