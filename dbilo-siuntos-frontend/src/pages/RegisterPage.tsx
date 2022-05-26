@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { LoginForm } from 'src/components/LoginForm';
+import { RegisterForm } from 'src/components/RegisterForm';
 import { getLoginState } from 'src/store/selectors/loginSelectors';
 
-export const LoginPage: React.FC = () => {
+export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
 
   const isLogged = useSelector(getLoginState)?.isLogged;
@@ -16,5 +16,5 @@ export const LoginPage: React.FC = () => {
     }
   }, [isLogged, navigate]);
 
-  return <LoginForm />;
+  return <RegisterForm />;
 };

@@ -28,6 +28,7 @@ const performGet = <TResponse>(
     withCredentials: Boolean(withCredentials),
   });
 
+//Fix this ugly withCredentials? situation
 const performPost = <TResponse>(
   url: string,
   data: Record<string, unknown> = {},
