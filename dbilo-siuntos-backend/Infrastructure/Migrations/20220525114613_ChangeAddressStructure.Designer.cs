@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220525114613_ChangeAddressStructure")]
+    partial class ChangeAddressStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,10 +155,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ParcelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ParcelStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("ParcelTrackingNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("TerminalId")
@@ -181,16 +187,35 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("AddressId");
+                    b.HasKey("Id");
 
                     b.ToTable("Terminals");
                 });
@@ -475,7 +500,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Models.Parcel", "Parcel")
                         .WithMany("Status")
                         .HasForeignKey("ParcelTrackingNumber")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Infrastructure.Models.Terminal", "Terminal")
                         .WithMany()
@@ -487,17 +513,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Parcel");
 
                     b.Navigation("Terminal");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
-                {
-                    b.HasOne("Infrastructure.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>

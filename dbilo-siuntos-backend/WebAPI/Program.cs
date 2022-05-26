@@ -79,6 +79,7 @@ builder.Services.AddLogging(loggingBuilder =>
 builder.Services.AddScoped<IParcelService, ParcelService>();
 builder.Services.AddSingleton<ITrackingNumberGenerator, TrackingNumberGenerator>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITerminalService, TerminalService>();
 
 var app = builder.Build();
 

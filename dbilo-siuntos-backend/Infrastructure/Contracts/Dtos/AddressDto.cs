@@ -6,28 +6,21 @@ namespace Infrastructure.Contracts.Dtos;
 
 public class AddressDto
 {
-    public string Name { get; set; }
-    public string LastName { get; set; }
-    [EmailAddress]
-    public string Email { get; set; }
-    [Phone]
-    public string PhoneNumber { get; set; }
+    [Required]
     public string City { get; set; }
+    [Required]
     public string AddressLine1 { get; set; }
     public string? AddressLine2 { get; set; }
+    [Required]
     public string PostalCode { get; set; }
     public string? Country { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
 
-    public static Address GetAddress(AddressDto addressDto)
+    public static Address GetEntity(AddressDto addressDto)
     {
         return new Address
         {
-            Name = addressDto.Name,
-            LastName = addressDto.LastName,
-            Email = addressDto.Email,
-            PhoneNumber = addressDto.PhoneNumber,
             City = addressDto.City,
             AddressLine1 = addressDto.AddressLine1,
             AddressLine2 = addressDto.AddressLine2,
@@ -35,6 +28,19 @@ public class AddressDto
             Country = addressDto.Country,
             Latitude = addressDto.Latitude,
             Longitude = addressDto.Longitude,
+        };
+    }
+    public static AddressDto GetDto(Address address)
+    {
+        return new AddressDto
+        {
+            City = address.City,
+            AddressLine1 = address.AddressLine1,
+            AddressLine2 = address.AddressLine2,
+            PostalCode = address.PostalCode,
+            Country = address.Country,
+            Latitude = address.Latitude,
+            Longitude = address.Longitude,
         };
     }
 }

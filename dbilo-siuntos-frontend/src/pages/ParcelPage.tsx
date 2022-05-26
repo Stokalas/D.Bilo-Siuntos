@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Container, Grid } from '@mui/material';
 import { useParams, useLocation } from 'react-router-dom';
+import { orderBy } from 'lodash';
 
 import { api } from 'src/api';
 import { Parcel } from 'src/types';
 import { ParcelTable } from '../components/parcel';
 import { GoogleMap } from 'src/components/map/';
+import { getAddressString } from 'src/utility/addressUtils';
 
-const mockParcelLocation = {
-  label: 'Vilnius Parcel Terminal',
-  position: { lat: 54.69, lng: 25.28 },
-  address: 'Vilnius, Lithuania',
+// const mockParcelLocation = {
+//   label: 'Vilnius Parcel Terminal',
+//   position: { lat: 54.69, lng: 25.28 },
+//   address: 'Vilnius, Lithuania',
+// };
+
+const createMarker = (parcel: Parcel) => {
+  const newestStatus = orderBy(parcel.status, 'date', 'asc')[0]!;
+  const currentAddress = newestStatus.address ?? newestStatus.terminal!.address;
+  //if there is no status error
+  //for now assume there is always
+  const position = { lat: currentAddress.latitude!, lng: currentAddress.longitude! };
+  const label = newestStatus.terminal?.name ?? '';
+  const address = getAddressString(currentAddress);
+  return { label, position, address };
 };
 
 export const ParcelPage: React.FC = () => {
@@ -28,10 +41,10 @@ export const ParcelPage: React.FC = () => {
       } else {
         setLoading(true);
         try {
-          const response = await api.get<Array<Parcel>>(`parcel/${trackingNumber}`);
-          if (response.length !== 0) {
+          const response = await api.get<Parcel>(`parcel/${trackingNumber}`);
+          if (response) {
             setError(false);
-            setParcel(response[0]);
+            setParcel(response);
           } else {
             setError(true);
           }
@@ -67,8 +80,8 @@ export const ParcelPage: React.FC = () => {
             <Grid item xs={12} md={6}>
               <GoogleMap
                 zoom={13}
-                center={mockParcelLocation.position}
-                markers={[mockParcelLocation]}
+                center={createMarker(parcel).position}
+                markers={[createMarker(parcel)]}
               />
             </Grid>
           </>

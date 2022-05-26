@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { Paper } from '@mui/material';
 
 import { Marker } from './Marker';
 import { MapComponent } from './MapComponent';
+import { api } from 'src/api';
+import { Terminal } from 'src/types';
 
 const apiKey = process.env.REACT_APP_MAPS_API_KEY!;
 
@@ -22,24 +24,6 @@ interface Location {
   address: string;
 }
 
-const exampleParcelTerminalMarkers = [
-  {
-    label: 'Vilnius Parcel Terminal',
-    position: { lat: 54.68, lng: 25.28 },
-    address: 'Vilnius, Lithuania',
-  },
-  {
-    label: 'Kaunas Parcel Terminal',
-    position: { lat: 54.91, lng: 23.89 },
-    address: 'Kaunas, Lithuania',
-  },
-  {
-    label: 'Klaipeda Parcel Terminal',
-    position: { lat: 55.72, lng: 21.12 },
-    address: 'Klaipeda, Lithuania',
-  },
-];
-
 interface GoogleMapProps {
   zoom?: number;
   center?: google.maps.LatLngLiteral;
@@ -47,29 +31,35 @@ interface GoogleMapProps {
   minHeight?: string;
 }
 
-export const GoogleMap: React.VFC<GoogleMapProps> = ({ zoom, center, markers, minHeight }) => {
-  const [stateMarkers, setMarkers] = React.useState<MarkerProps[]>([]);
-  const [infoWindow, setInfoWindow] = React.useState<google.maps.InfoWindow>();
-  const [status, setStatus] = React.useState(Status.LOADING);
+export const GoogleMap: React.VFC<GoogleMapProps> = ({ zoom, center, minHeight }) => {
+  const [stateMarkers, setMarkers] = useState<MarkerProps[]>([]);
+  const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow>();
+  const [status, setStatus] = useState(Status.LOADING);
+
+  useEffect(() => {
+    //TODO handle error
+    if (status === Status.SUCCESS) {
+      api.get<Array<Terminal>>('terminal/all', {}, true).then((response) => {
+        setMarkers(
+          response.map((t) => {
+            return {
+              label: `${t.name}, ${t.address.addressLine1}, ${t.address.postalCode}`,
+              position: new google.maps.LatLng({
+                lat: t.address.latitude!,
+                lng: t.address.longitude!,
+              }),
+            };
+          })
+        );
+      });
+    }
+  }, [status]);
 
   const defaultZoom = 7;
   const defaultCenter = {
     lat: 55,
     lng: 24,
   };
-
-  React.useEffect(() => {
-    if (status === Status.SUCCESS) {
-      setMarkers(
-        (markers ?? exampleParcelTerminalMarkers).map((x) => {
-          return {
-            label: `${x.label}, ${x.address}`,
-            position: new google.maps.LatLng(x.position),
-          };
-        })
-      );
-    }
-  }, [status, markers]);
 
   const onClick = (_: google.maps.MapMouseEvent) => {
     // example of how to add markers

@@ -10,15 +10,17 @@ namespace Infrastructure.Models
         public string TrackingNumber { get; set; }
         public ParcelSize Size { get; set; }
 
-        public User? Shipper { get; set; }
-        public DateTime? ShipmentDate { get; set; } 
-        public Address ShippingAddress { get; set; }
+        public RecipientDetails ShipperDetails { get; set; }
+        public RecipientDetails ReceiverDetails { get; set; }
 
-        public DateTime? DeliveryDate { get; set; }
-        public Address DeliveryAddress { get; set; }
+        public User? Shipper { get; set; }
+
+        public Address? PickupAddress { get; set; }
+        public Address? DeliveryAddress { get; set; }
 
         public ICollection<Status> Status { get; set; }
 
-        public Terminal? Terminal { get; set; }
+        public Terminal? PickupTerminal { get; set; }
+        public Terminal? DeliveryTerminal { get; set; }
     }
 }

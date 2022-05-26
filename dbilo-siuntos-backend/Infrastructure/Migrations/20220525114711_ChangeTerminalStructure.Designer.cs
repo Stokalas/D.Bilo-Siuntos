@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220525114711_ChangeTerminalStructure")]
+    partial class ChangeTerminalStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,10 +155,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ParcelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ParcelStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("ParcelTrackingNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("TerminalId")
@@ -475,7 +481,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Models.Parcel", "Parcel")
                         .WithMany("Status")
                         .HasForeignKey("ParcelTrackingNumber")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Infrastructure.Models.Terminal", "Terminal")
                         .WithMany()

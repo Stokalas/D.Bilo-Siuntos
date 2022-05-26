@@ -16,56 +16,26 @@ const performRequest = async <TResponse>(config: ApiRequestConfig) => {
   return response.data;
 };
 
-const performGet = <TResponse>(
-  url: string,
-  params: ApiQueryParams = {},
-  withCredentials?: boolean
-) =>
-  performRequest<TResponse>({
-    method: 'get',
-    params,
-    url,
-    withCredentials: Boolean(withCredentials),
-  });
+const performGet = <TResponse>(url: string, params: ApiQueryParams = {}, withCredentials = false) =>
+  performRequest<TResponse>({ method: 'get', params, url, withCredentials });
 
-//Fix this ugly withCredentials? situation
 const performPost = <TResponse>(
   url: string,
   data: Record<string, unknown> = {},
-  withCredentials?: boolean
-) =>
-  performRequest<TResponse>({
-    data,
-    method: 'post',
-    url,
-    withCredentials: Boolean(withCredentials),
-  });
+  withCredentials = false
+) => performRequest<TResponse>({ data, method: 'post', url, withCredentials });
 
 const performPatch = <TResponse>(url: string, data: Record<string, unknown> = {}) =>
-  performRequest<TResponse>({
-    data,
-    method: 'patch',
-    url,
-  });
+  performRequest<TResponse>({ data, method: 'patch', url });
 
 const performPut = <TResponse>(url: string, data: Record<string, unknown> = {}) =>
-  performRequest<TResponse>({
-    data,
-    method: 'put',
-    url,
-  });
+  performRequest<TResponse>({ data, method: 'put', url });
 
 const performDelete = <TResponse>(
   url: string,
   data: Record<string, unknown> = {},
   config: AxiosRequestConfig = {}
-) =>
-  performRequest<TResponse>({
-    ...config,
-    data,
-    method: 'delete',
-    url,
-  });
+) => performRequest<TResponse>({ ...config, data, method: 'delete', url });
 
 export const api = {
   delete: performDelete,

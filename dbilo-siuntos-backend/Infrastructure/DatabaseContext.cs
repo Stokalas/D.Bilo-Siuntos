@@ -12,6 +12,7 @@ namespace Infrastructure
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Terminal> Terminals { get; set; }
+        public DbSet<RecipientDetails> RecipientDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
