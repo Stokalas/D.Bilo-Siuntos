@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
+    //[Authorize(AuthenticationSchemes = "Cookies")]
     [ApiController]
     public class ParcelController : Controller
     {
         private readonly ILogger<ParcelController> _logger;
         private IParcelService _service;
         private ITrackingNumberGenerator _generator;
+        private IEmailSender _emailSender;
 
-        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITrackingNumberGenerator generator)
+        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITrackingNumberGenerator generator, IEmailSender emailSender)
         {
             _logger = logger;
             _service = service;
             _generator = generator;
+            _emailSender = emailSender;
         }
 
         [HttpGet("parcel/all")]
-        [Authorize(AuthenticationSchemes = "Cookies", Roles = UserRoles.Admin + "," + UserRoles.User)]
+        //[Authorize(AuthenticationSchemes = "Cookies", Roles = UserRoles.Admin + "," + UserRoles.User)]
         public async Task<ActionResult<IEnumerable<Parcel>>> Get()
         {
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
@@ -35,7 +38,6 @@ namespace WebAPI.Controllers
         {
             _logger.LogInformation("Executed {0}->{1}({2})", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
             var res = await _service.GetByTrackingId(trackingNumber);
-
             return Ok(res);
         }
 
@@ -44,6 +46,8 @@ namespace WebAPI.Controllers
         {
             parcel.TrackingNumber = _generator.GenerateNumber();
             var res = await _service.Insert(parcel);
+            _emailSender.SendSender(parcel.ShippingAddress, parcel.TrackingNumber);
+            _emailSender.SendReceiver(parcel.DeliveryAddress, parcel.TrackingNumber);
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             return Ok(res);
         }
