@@ -138,7 +138,7 @@ namespace Infrastructure.DataAccess
                 }
                 else
                 {
-                    throw new NotSupportedException("Parcel was not updated!");
+                    throw new Exception("Parcel was not updated!");
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace Infrastructure.DataAccess
                 }
                 else
                 {
-                    throw new NotSupportedException("Parcel was not updated!");
+                    throw new Exception("Parcel was not updated!");
                 }
             }
         }
