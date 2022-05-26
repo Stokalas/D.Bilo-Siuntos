@@ -93,26 +93,48 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<User> Update(int id, User updatedUser)
+        public async Task<User> Update(int id, User updatedUser, bool rewrite = false)
         {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                return null;
+            }
+            user.Address = updatedUser.Address;
+            user.Parcels = updatedUser.Parcels;
+
+            _dbContext.Users.Update(user);
             try
             {
-                var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-                if (user == null)
-                {
-                    return null;
-                }
-                user.Address = updatedUser.Address;
-                user.Parcels = updatedUser.Parcels;
-
-                _dbContext.Users.Update(user);
                 await _dbContext.SaveChangesAsync();
                 return user;
             }
-            catch
+            catch (DbUpdateConcurrencyException ex)
             {
-                //Log error
-                throw;
+                if (rewrite == true)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        if (entry.Entity is Parcel)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+
+                            foreach (var property in proposedValues.Properties)
+                            {
+                                var proposedValue = proposedValues[property];
+                                var databaseValue = databaseValues[property];
+                            }
+                            entry.OriginalValues.SetValues(databaseValues);
+                        }
+                    }
+                    await _dbContext.SaveChangesAsync();
+                    return user;
+                }
+                else
+                {
+                    throw new Exception("User was not updated!");
+                }
             }
         }
     }

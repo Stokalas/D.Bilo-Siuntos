@@ -93,58 +93,102 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<Parcel> Update(string trackingNumber, Parcel updatedParcel)
+        public async Task<Parcel> Update(string trackingNumber, Parcel updatedParcel, bool rewrite = false)
         {
+            var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+            if (parcel == null)
+            {
+                return null;
+            }
+            parcel.ShipmentDate = updatedParcel.ShipmentDate;
+            parcel.ShippingAddress = updatedParcel.ShippingAddress;
+
+            parcel.DeliveryDate = updatedParcel.DeliveryDate;
+            parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
+
+            parcel.Terminal = updatedParcel.Terminal;
+
+            _dbContext.Parcels.Update(parcel);
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
-                if (parcel == null)
-                {
-                    return null;
-                }
-                parcel.ShipmentDate = updatedParcel.ShipmentDate;
-                parcel.ShippingAddress = updatedParcel.ShippingAddress;
-
-                parcel.DeliveryDate = updatedParcel.DeliveryDate;
-                parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
-
-                parcel.Terminal = updatedParcel.Terminal;
-
-                _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch
+            catch (DbUpdateConcurrencyException ex)
             {
-                //Log error
-                throw;
+                if (rewrite == true)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        if (entry.Entity is Parcel)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+
+                            foreach (var property in proposedValues.Properties)
+                            {
+                                var proposedValue = proposedValues[property];
+                                var databaseValue = databaseValues[property];
+                            }
+                            entry.OriginalValues.SetValues(databaseValues);
+                        }
+                    }
+                    await _dbContext.SaveChangesAsync();
+                    return parcel;
+                }
+                else
+                {
+                    throw new Exception("Parcel was not updated!");
+                }
             }
         }
-        public async Task<Parcel> Update(int id, Parcel updatedParcel)
+        public async Task<Parcel> Update(int id, Parcel updatedParcel, bool rewrite = false)
         {
+            var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.Id == id);
+            if (parcel == null)
+            {
+                return null;
+            }
+            parcel.ShipmentDate = updatedParcel.ShipmentDate;
+            parcel.ShippingAddress = updatedParcel.ShippingAddress;
+
+            parcel.DeliveryDate = updatedParcel.DeliveryDate;
+            parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
+
+            parcel.Terminal = updatedParcel.Terminal;
+
+            _dbContext.Parcels.Update(parcel);
             try
             {
-                var parcel = await _dbContext.Parcels.FirstOrDefaultAsync(x => x.Id == id);
-                if (parcel == null)
-                {
-                    return null;
-                }
-                parcel.ShipmentDate = updatedParcel.ShipmentDate;
-                parcel.ShippingAddress = updatedParcel.ShippingAddress;
-
-                parcel.DeliveryDate = updatedParcel.DeliveryDate;
-                parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
-
-                parcel.Terminal = updatedParcel.Terminal;
-
-                _dbContext.Parcels.Update(parcel);
                 await _dbContext.SaveChangesAsync();
                 return parcel;
             }
-            catch
+            catch (DbUpdateConcurrencyException ex)
             {
-                //Log error
-                throw;
+                if (rewrite == true)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        if (entry.Entity is Parcel)
+                        {
+                            var proposedValues = entry.CurrentValues;
+                            var databaseValues = entry.GetDatabaseValues();
+
+                            foreach (var property in proposedValues.Properties)
+                            {
+                                var proposedValue = proposedValues[property];
+                                var databaseValue = databaseValues[property];
+                            }
+                            entry.OriginalValues.SetValues(databaseValues);
+                        }
+                    }
+                    await _dbContext.SaveChangesAsync();
+                    return parcel;
+                }
+                else
+                {
+                    throw new Exception("Parcel was not updated!");
+                }
             }
         }
         public async Task<Parcel> UpdateParcelStatus(int id, Status status)

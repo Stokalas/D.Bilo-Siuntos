@@ -20,5 +20,7 @@ namespace Infrastructure.Models
         public ICollection<Status> Status { get; set; }
 
         public Terminal? Terminal { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
