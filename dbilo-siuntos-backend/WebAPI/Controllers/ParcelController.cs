@@ -35,12 +35,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<Parcel>>> Get()
         {
             var cookie_token = Request.Cookies["token"];
-            var username = "Guest";
-            if (cookie_token != null)
-            {
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(cookie_token);
-                username = token.Claims.First(claim => claim.Type == "email").Value;
-            }
+            var username = UserGetter(cookie_token);
             _logger.LogInformation("User {0} Executed {1}->{2}", username,this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             var result = await _service.GetAll();
             return Ok(result);
@@ -50,12 +45,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<ParcelDto>> GetParcel(string trackingNumber)
         {
             var cookie_token = Request.Cookies["token"];
-            var username = "Guest";
-            if (cookie_token != null)
-            {
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(cookie_token);
-                username = token.Claims.First(claim => claim.Type == "email").Value;
-            }
+            var username = UserGetter(cookie_token);
             _logger.LogInformation("User {0} executed {1}->{2}({3})", username, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
             var res = await _service.GetByTrackingId(trackingNumber);
 
@@ -66,12 +56,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<ParcelDto>> Post(PostParcelRequest request)
         {
             var cookie_token = Request.Cookies["token"];
-            var username = "Guest";
-            if (cookie_token != null)
-            {
-                var token = new JwtSecurityTokenHandler().ReadJwtToken(cookie_token);
-                username = token.Claims.First(claim => claim.Type == "email").Value;
-            }
+            var username = UserGetter(cookie_token);
             var parcel = PostParcelRequest.GetParcel(request);
 
             if (request.PickupTerminalId.HasValue)
@@ -150,5 +135,16 @@ namespace WebAPI.Controllers
 
             return Ok(ParcelDto.GetDto(res));
         }
+        private string UserGetter(string cookie)
+        {
+            if (cookie != null)
+            {
+                var token = new JwtSecurityTokenHandler().ReadJwtToken(cookie);
+                return token.Claims.First(claim => claim.Type == "email").Value;
+            }
+            return "Guest";
+        }
+
     }
+    
 }
