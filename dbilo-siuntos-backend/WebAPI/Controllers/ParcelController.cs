@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
                 parcel.DeliveryTerminal = deliveryTerminal;
             }
             if (request.UserId.HasValue)
-            {   
+            {
                 var user = await _userService.GetById(request.UserId.Value);
                 if (user == null)
                 {

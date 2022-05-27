@@ -11,5 +11,7 @@ public class User : IdentityUser<int>
     public string LastName { get; set; }
     public Address? Address { get; set; }
     public ICollection<Parcel>? Parcels { get; set; }
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
 }
 

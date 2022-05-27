@@ -22,5 +22,8 @@ namespace Infrastructure.Models
 
         public Terminal? PickupTerminal { get; set; }
         public Terminal? DeliveryTerminal { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
