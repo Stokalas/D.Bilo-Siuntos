@@ -109,7 +109,7 @@ namespace WebAPI.Controllers
                 parcel.Status = status;
             }
 
-            parcel.TrackingNumber = _generator.GenerateNumber();
+            parcel = _generator.GenerateNumber(parcel);
             var res = await _service.Insert(parcel);
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
 

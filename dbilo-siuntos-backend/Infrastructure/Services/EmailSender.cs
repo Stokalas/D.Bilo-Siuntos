@@ -72,7 +72,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Could not send the message");
+                _logger.LogWarning("Could not send the message to receiver\n" + ex.ToString());
             }
         }
 
@@ -122,7 +122,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Could not send the message");
+                _logger.LogWarning("Could not send the message to sender\n" + ex.ToString());
             }
         }
     }

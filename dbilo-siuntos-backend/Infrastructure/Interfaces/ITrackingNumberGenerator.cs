@@ -1,7 +1,9 @@
-﻿namespace Infrastructure.Interfaces
+﻿using Infrastructure.Models;
+
+namespace Infrastructure.Interfaces
 {
     public interface ITrackingNumberGenerator
     {
-        public string GenerateNumber();
+        public Parcel GenerateNumber(Parcel parcel);
     }
 }
