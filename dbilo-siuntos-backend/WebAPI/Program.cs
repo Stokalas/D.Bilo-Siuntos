@@ -76,7 +76,7 @@ builder.Services.AddLogging(loggingBuilder =>
 });
 var decoratorSettings = builder.Configuration.GetSection("DecoratorSettings").Get<DecoratorSettings>();
 builder.Services.AddScoped<IParcelService, ParcelService>();
-builder.Services.AddScoped<IParcelService, ParcelService>();
+
 if (decoratorSettings.CountryGenerator)
 {
     builder.Services.AddScoped<TrackingNumberGenerator>();
