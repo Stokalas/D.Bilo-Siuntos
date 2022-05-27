@@ -47,6 +47,37 @@ namespace WebAPI.Controllers
             return Ok(ParcelDto.GetDto(res));
         }
 
+        [HttpPut("parcel/{trackingNumber}")]
+        public async Task<ActionResult<ParcelDto>> UpdateDeliveryTerminal(string trackingNumber, UpdateDeliverypTerminalRequest request)
+        {
+            _logger.LogInformation("Executed {0}->{1}({2})", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
+            var existingParcel = await _service.GetByTrackingId(trackingNumber);
+            var terminal = await _terminalService.GetById(request.DeliveryTerminalId);
+            if (existingParcel == null)
+            {
+                return BadRequest(new BadRequestObjectResult($"Parcel with {trackingNumber} Id not found"));
+            }
+            if (terminal == null)
+            {
+                return BadRequest(new BadRequestObjectResult($"Terminal with {request.DeliveryTerminalId} Id not found"));
+            }
+            existingParcel.DeliveryTerminal = terminal;
+            try
+            {
+                var res = await _service.Update(trackingNumber, existingParcel, request.Overwrite);
+
+                return Ok(ParcelDto.GetDto(res));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Conflict(new BadRequestObjectResult($"Concurrency Error!"));
+            }
+            catch (System.Exception)
+            {
+                return BadRequest(new BadRequestObjectResult($"Something went wrong!"));
+            }
+        }
+
         [HttpPost("parcel")]
         public async Task<ActionResult<ParcelDto>> Post(PostParcelRequest request)
         {
@@ -117,11 +148,10 @@ namespace WebAPI.Controllers
             if (parcel.PickupAddress != null)
             {
                 _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupAddress, parcel.TrackingNumber);
-
             }
             else
             {
-                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal.Address, parcel.TrackingNumber);
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal!.Address, parcel.TrackingNumber);
             }
 
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes

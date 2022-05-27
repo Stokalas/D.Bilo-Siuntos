@@ -113,14 +113,6 @@ namespace Infrastructure.DataAccess
             {
                 return null;
             }
-            /*parcel.ShipmentDate = updatedParcel.ShipmentDate;
-            parcel.ShippingAddress = updatedParcel.ShippingAddress;
-
-            parcel.DeliveryDate = updatedParcel.DeliveryDate;
-            parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
-
-            parcel.Terminal = updatedParcel.Terminal;
-            */
 
             _dbContext.Parcels.Update(parcel);
             try
@@ -152,7 +144,7 @@ namespace Infrastructure.DataAccess
                 }
                 else
                 {
-                    throw new Exception("Parcel was not updated!");
+                    throw new DbUpdateConcurrencyException("Concurency error encoutered");
                 }
             }
         }
