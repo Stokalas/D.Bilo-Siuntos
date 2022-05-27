@@ -9,7 +9,7 @@ using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebAPI;
-
+using Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +25,6 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddCors(cors =>
         {
             cors.AddPolicy("dev", builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(origin => true).AllowCredentials());
@@ -75,9 +74,21 @@ builder.Services.AddLogging(loggingBuilder =>
         };
     });
 });
-
+var decoratorSettings = builder.Configuration.GetSection("DecoratorSettings").Get<DecoratorSettings>();
 builder.Services.AddScoped<IParcelService, ParcelService>();
-builder.Services.AddSingleton<ITrackingNumberGenerator, TrackingNumberGenerator>();
+builder.Services.AddScoped<IParcelService, ParcelService>();
+if (decoratorSettings.CountryGenerator)
+{
+    builder.Services.AddScoped<TrackingNumberGenerator>();
+    builder.Services.AddScoped<ITrackingNumberGenerator>(provider =>
+        new CountryGenerator(provider.GetRequiredService<TrackingNumberGenerator>()));
+}
+else
+{
+    builder.Services.AddSingleton<ITrackingNumberGenerator, TrackingNumberGenerator>();
+}
+
+
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddSingleton<Secrets>(new Secrets()
 {

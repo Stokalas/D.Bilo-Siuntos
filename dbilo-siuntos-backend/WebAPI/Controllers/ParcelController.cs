@@ -44,7 +44,8 @@ namespace WebAPI.Controllers
         [HttpPost("parcel")]
         public async Task<ActionResult<Parcel>> Post(Parcel parcel)
         {
-            parcel.TrackingNumber = _generator.GenerateNumber();
+            parcel = _generator.GenerateNumber(parcel);
+            //var user = User.FindFirst("name");
             var res = await _service.Insert(parcel);
             _emailSender.SendSender(parcel.ShippingAddress, parcel.TrackingNumber);
             _emailSender.SendReceiver(parcel.DeliveryAddress, parcel.TrackingNumber);
