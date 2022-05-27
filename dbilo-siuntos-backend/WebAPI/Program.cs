@@ -79,8 +79,8 @@ builder.Services.AddScoped<IParcelService, ParcelService>();
 
 if (decoratorSettings.CountryGenerator)
 {
-    builder.Services.AddScoped<TrackingNumberGenerator>();
-    builder.Services.AddScoped<ITrackingNumberGenerator>(provider =>
+    builder.Services.AddSingleton<TrackingNumberGenerator>();
+    builder.Services.AddSingleton<ITrackingNumberGenerator>(provider =>
         new CountryGenerator(provider.GetRequiredService<TrackingNumberGenerator>()));
 }
 else
