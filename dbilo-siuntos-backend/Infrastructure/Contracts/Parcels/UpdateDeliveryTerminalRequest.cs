@@ -11,5 +11,7 @@ public class UpdateDeliverypTerminalRequest
     public int DeliveryTerminalId { get; set; }
     [Required]
     public bool Overwrite { get; set; }
+    [Required]
+    public byte[] RowVersion { get; set; }
 }
 

@@ -96,6 +96,7 @@ export const ParcelPage: React.FC = () => {
       const response = await api.put<Parcel>(`parcel/${trackingNumber}`, {
         deliveryTerminalId: terminalId,
         overwrite,
+        rowVersion: parcel!.rowVersion,
       });
       dispatch(
         SetNotificationAction({
@@ -110,7 +111,9 @@ export const ParcelPage: React.FC = () => {
     } catch (error) {
       if (error?.response?.status === 409) {
         setOverwrite(true);
-        setUpdateErrorMessage('Concurrency error! Would you like to try again?');
+        setUpdateErrorMessage(
+          'Some data has changed! Would you like to overwrite potential changes?'
+        );
       } else {
         setUpdateErrorMessage('Something went wrong!');
       }

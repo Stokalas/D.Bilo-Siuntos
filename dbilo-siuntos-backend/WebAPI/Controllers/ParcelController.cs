@@ -66,6 +66,10 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(new BadRequestObjectResult($"Terminal with {request.DeliveryTerminalId} Id not found"));
             }
+            if (!existingParcel.RowVersion.SequenceEqual(request.RowVersion)&& !request.Overwrite)
+            {
+                return Conflict(new BadRequestObjectResult($"Concurrency Error!"));
+            }
             existingParcel.DeliveryTerminal = terminal;
             try
             {
@@ -165,6 +169,7 @@ namespace WebAPI.Controllers
 
             return Ok(ParcelDto.GetDto(res));
         }
+
         private string UserGetter(string? cookie)
         {
             if (cookie != null)
