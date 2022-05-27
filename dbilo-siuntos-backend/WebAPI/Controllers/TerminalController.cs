@@ -1,9 +1,8 @@
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.DataAccess;
 using Infrastructure.Interfaces;
-using Infrastructure.Contracts.Parcels;
 using Infrastructure.Contracts.Dtos;
+using Infrastructure.DataMappers;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,11 +15,15 @@ public class TerminalController : Controller
 
     private readonly ILogger<TerminalController> _logger;
     private ITerminalService _service;
+    private readonly IConfiguration _configuration;
+    private TerminalDataMapper _mapper;
 
-    public TerminalController(ILogger<TerminalController> logger, ITerminalService service)
+    public TerminalController(ILogger<TerminalController> logger, ITerminalService service, IConfiguration configuration)
     {
         _logger = logger;
         _service = service;
+        _configuration = configuration;
+        _mapper = new TerminalDataMapper(_configuration.GetConnectionString("DefaultConnection"));
     }
 
     [HttpGet("terminal/all")]
@@ -39,7 +42,7 @@ public class TerminalController : Controller
         var cookie_token = Request.Cookies["token"];
         var username = UserGetter(cookie_token);
         _logger.LogInformation("User {0} Executed {0}->{1}({2})", username, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, id); ; //testing purposes
-        var res = await _service.GetById(id);
+        var res = await _mapper.GetById(id);
 
         return Ok(TerminalDto.GetDto(res));
     }
