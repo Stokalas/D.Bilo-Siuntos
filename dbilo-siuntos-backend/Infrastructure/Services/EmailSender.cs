@@ -12,7 +12,7 @@ using MimeKit;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-
+using System.Reflection;
 
 namespace Infrastructure.Services
 {
@@ -26,7 +26,7 @@ namespace Infrastructure.Services
             _secrets = secrets;
         }
 
-        public async void SendReceiver(RecipientDetails data, Address address, string tracking)
+        public async void SendReceiver(RecipientDetails data, Address address, string tracking, string username)
         {
             try
             {
@@ -69,6 +69,8 @@ namespace Infrastructure.Services
                     await client.SendAsync(email);
                     client.Disconnect(true);
                 }
+                _logger.LogInformation("User {0} Executed {1}->{2}", username, this.GetType().Name, MethodBase.GetCurrentMethod());
+
             }
             catch (Exception ex)
             {
@@ -76,7 +78,7 @@ namespace Infrastructure.Services
             }
         }
 
-        public async void SendSender(RecipientDetails data, string tracking)
+        public async void SendSender(RecipientDetails data, string tracking, string username)
         {
             try
             {
@@ -119,6 +121,7 @@ namespace Infrastructure.Services
                     await client.SendAsync(email);
                     client.Disconnect(true);
                 }
+                _logger.LogInformation("User {0} Executed {1}->{2}", username, this.GetType().Name, MethodBase.GetCurrentMethod());
             }
             catch (Exception ex)
             {
