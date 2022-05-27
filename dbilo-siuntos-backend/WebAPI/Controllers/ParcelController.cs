@@ -6,6 +6,7 @@ using Infrastructure.Contracts.Parcels;
 using Infrastructure.Contracts.Dtos;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebAPI.Controllers
 {
@@ -33,7 +34,9 @@ namespace WebAPI.Controllers
         [Authorize(AuthenticationSchemes = "Cookies", Roles = UserRoles.Admin + "," + UserRoles.User)]
         public async Task<ActionResult<IEnumerable<Parcel>>> Get()
         {
-            _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
+            var cookie_token = Request.Cookies["token"];
+            var username = UserGetter(cookie_token);
+            _logger.LogInformation("User {0} Executed {1}->{2}", username,this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             var result = await _service.GetAll();
             return Ok(result);
         }
@@ -41,7 +44,9 @@ namespace WebAPI.Controllers
         [HttpGet("parcel/{trackingNumber}")]
         public async Task<ActionResult<ParcelDto>> GetParcel(string trackingNumber)
         {
-            _logger.LogInformation("Executed {0}->{1}({2})", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
+            var cookie_token = Request.Cookies["token"];
+            var username = UserGetter(cookie_token);
+            _logger.LogInformation("User {0} executed {1}->{2}({3})", username, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
             var res = await _service.GetByTrackingId(trackingNumber);
 
             return Ok(ParcelDto.GetDto(res));
@@ -50,6 +55,8 @@ namespace WebAPI.Controllers
         [HttpPost("parcel")]
         public async Task<ActionResult<ParcelDto>> Post(PostParcelRequest request)
         {
+            var cookie_token = Request.Cookies["token"];
+            var username = UserGetter(cookie_token);
             var parcel = PostParcelRequest.GetParcel(request);
 
             if (request.PickupTerminalId.HasValue)
@@ -111,22 +118,33 @@ namespace WebAPI.Controllers
                 parcel.Status = status;
             }
 
-            parcel = _generator.GenerateNumber(parcel);
+            parcel = _generator.GenerateNumber(parcel, username);
             var res = await _service.Insert(parcel);
-            _emailSender.SendSender(parcel.ShipperDetails, parcel.TrackingNumber);
+            _emailSender.SendSender(parcel.ShipperDetails, parcel.TrackingNumber, username);
             if (parcel.PickupAddress != null)
             {
-                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupAddress, parcel.TrackingNumber);
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupAddress, parcel.TrackingNumber, username);
 
             }
             else
             {
-                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal.Address, parcel.TrackingNumber);
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal.Address, parcel.TrackingNumber, username);
             }
 
-            _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
+            _logger.LogInformation("User {0} Executed {1}->{2}", username,this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
 
             return Ok(ParcelDto.GetDto(res));
         }
+        private string UserGetter(string cookie)
+        {
+            if (cookie != null)
+            {
+                var token = new JwtSecurityTokenHandler().ReadJwtToken(cookie);
+                return token.Claims.First(claim => claim.Type == "email").Value;
+            }
+            return "Guest";
+        }
+
     }
+    
 }

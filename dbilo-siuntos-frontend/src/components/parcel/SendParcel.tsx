@@ -151,7 +151,7 @@ export const SendParcelForm = () => {
       parcel = { ...parcel, pickupAddress };
     }
 
-    api.post<Parcel>('parcel', parcel).then((response) => {
+    api.post<Parcel>('parcel', parcel, true).then((response) => {
       dispatch(
         SetNotificationAction({
           isOpen: true,
