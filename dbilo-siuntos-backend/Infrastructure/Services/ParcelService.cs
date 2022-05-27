@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Enums;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Contracts.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess
@@ -18,7 +19,11 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                var parcel = await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                //var parcel = await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
+                var parcel = await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress)
+                    .Include(s => s.Status).Include(p => p.ReceiverDetails).Include(p => p.ShipperDetails)
+                    .Include(p => p.PickupTerminal).ThenInclude(t => t.Address)
+                    .Include(p => p.DeliveryTerminal).ThenInclude(t => t.Address).FirstOrDefaultAsync(x => x.TrackingNumber == trackingNumber);
                 if (parcel == null)
                 {
                     return null;
@@ -36,7 +41,11 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).Where(x => x.ShipperID == shipperId).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress)
+                .Include(s => s.Status).Include(p => p.ReceiverDetails).Include(p => p.ShipperDetails)
+                .Include(p => p.PickupTerminal).ThenInclude(t => t.Address)
+                .Include(p => p.DeliveryTerminal).ThenInclude(t => t.Address).Where(x => x.Shipper.Id == shipperId).ToListAsync();
+                //return await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).Where(x => x.Shipper.Id == shipperId).ToListAsync();
             }
             catch
             {
@@ -49,7 +58,11 @@ namespace Infrastructure.DataAccess
         {
             try
             {
-                return await _dbContext.Parcels.Include(c => c.ShippingAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).ToListAsync();
+                //return await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress).Include(s => s.Status).Include(v => v.Terminal).ToListAsync();
+                return await _dbContext.Parcels.Include(c => c.PickupAddress).Include(t => t.DeliveryAddress)
+                .Include(s => s.Status).Include(p => p.ReceiverDetails).Include(p => p.ShipperDetails)
+                .Include(p => p.PickupTerminal).ThenInclude(t => t.Address)
+                .Include(p => p.DeliveryTerminal).ThenInclude(t => t.Address).ToListAsync();
             }
             catch
             {
@@ -58,13 +71,13 @@ namespace Infrastructure.DataAccess
             }
         }
 
-        public async Task<String> Insert(Parcel newParcel)
+        public async Task<Parcel> Insert(Parcel newParcel)
         {
             try
             {
                 await _dbContext.Parcels.AddAsync(newParcel);
                 await _dbContext.SaveChangesAsync();
-                return newParcel.TrackingNumber;
+                return newParcel;
             }
             catch
             {
@@ -100,13 +113,14 @@ namespace Infrastructure.DataAccess
             {
                 return null;
             }
-            parcel.ShipmentDate = updatedParcel.ShipmentDate;
+            /*parcel.ShipmentDate = updatedParcel.ShipmentDate;
             parcel.ShippingAddress = updatedParcel.ShippingAddress;
 
             parcel.DeliveryDate = updatedParcel.DeliveryDate;
             parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
 
             parcel.Terminal = updatedParcel.Terminal;
+            */
 
             _dbContext.Parcels.Update(parcel);
             try
@@ -149,14 +163,14 @@ namespace Infrastructure.DataAccess
             {
                 return null;
             }
-            parcel.ShipmentDate = updatedParcel.ShipmentDate;
+            /*parcel.ShipmentDate = updatedParcel.ShipmentDate;
             parcel.ShippingAddress = updatedParcel.ShippingAddress;
 
             parcel.DeliveryDate = updatedParcel.DeliveryDate;
             parcel.DeliveryAddress = updatedParcel.DeliveryAddress;
 
             parcel.Terminal = updatedParcel.Terminal;
-
+            */
             _dbContext.Parcels.Update(parcel);
             try
             {

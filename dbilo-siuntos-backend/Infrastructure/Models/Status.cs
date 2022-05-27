@@ -6,8 +6,9 @@ namespace Infrastructure.Models
     {
         public int Id { get; set; }
         public ParcelStatus ParcelStatus { get; set; }
-        public int ParcelId { get; set; }
         public Parcel Parcel { get; set; }
         public DateTime Date { get; set; }
+        public Address? Address { get; set; }
+        public Terminal? Terminal { get; set; }
     }
 }

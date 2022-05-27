@@ -16,7 +16,8 @@ namespace Infrastructure.Services
         {
             try
             {
-                var terminal = await _dbContext.Terminals.Include(p => p.Parcels).FirstOrDefaultAsync(x => x.Id == id);
+                //var terminal = await _dbContext.Terminals.Include(p => p.Parcels).FirstOrDefaultAsync(x => x.Id == id);
+                var terminal = await _dbContext.Terminals.Include(p => p.Address).FirstOrDefaultAsync(x => x.Id == id);
                 if (terminal == null)
                 {
                     return null;
@@ -34,7 +35,8 @@ namespace Infrastructure.Services
         {
             try
             {
-                return await _dbContext.Terminals.Include(p => p.Parcels).ToListAsync();
+                return await _dbContext.Terminals.Include(p => p.Address).ToListAsync();
+                //return await _dbContext.Terminals.Include(p => p.Parcels).ToListAsync();
             }
             catch
             {

@@ -1,5 +1,6 @@
-﻿namespace Infrastructure.Contracts.Authentication;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Infrastructure.Contracts.Authentication;
 
 public class LoginRequest
 {

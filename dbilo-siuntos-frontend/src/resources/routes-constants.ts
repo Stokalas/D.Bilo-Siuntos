@@ -5,5 +5,5 @@ export const ROUTES = {
   LOGIN: { url: '/login', name: 'Login' },
   LOGOUT: { url: '/logout', name: 'Logout' },
   CREATE_PARCEL: { url: '/send-parcel', name: 'Send Parcel' },
-  PARCEL_PAGE: { url: '/parcel/:id', name: 'Parcel Page' },
+  PARCEL_PAGE: { url: '/parcel/:trackingNumber', name: 'Parcel Page' },
 };

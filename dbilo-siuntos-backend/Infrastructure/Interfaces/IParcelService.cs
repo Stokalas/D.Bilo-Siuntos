@@ -8,7 +8,7 @@ namespace Infrastructure.Interfaces
         public Task<Parcel> GetByTrackingId(string trackingNumber);
         public Task<IList<Parcel>> GetAllByUserId(int shipperId);
         public Task<IList<Parcel>> GetAll();
-        public Task<String> Insert(Parcel newParcel);
+        public Task<Parcel> Insert(Parcel newParcel);
         public Task<Parcel> Delete(string trackingNumber);
         public Task<Parcel> Update(string trackingNumber, Parcel updatedParcel, bool rewrite = false);
         public Task<Parcel> Update(int id, Parcel updatedParcel, bool rewrite = false);

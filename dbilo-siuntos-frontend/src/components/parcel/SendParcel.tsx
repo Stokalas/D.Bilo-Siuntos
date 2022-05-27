@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import {
   Typography,
@@ -9,28 +9,35 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { api } from 'src/api';
-import { SendParcelForm } from './SendParcelForm';
+import { AddressForm } from './AddressForm';
 import { geocode } from 'src/utility';
+import { Parcel, Terminal } from 'src/types';
+import { SetNotificationAction } from 'src/store/actions/notificationsActions';
 
 // import { useSelector } from 'react-redux';
 // import { getLoginState } from 'src/store/selectors/loginSelectors';
 
-export type SendFormProps = {
-  setName: Dispatch<SetStateAction<string>>;
-  setSurname: Dispatch<SetStateAction<string>>;
-  setPhoneNum: Dispatch<SetStateAction<string>>;
-  setEmail: Dispatch<SetStateAction<string>>;
-  setAddress: Dispatch<SetStateAction<string>>;
-  setAddress2: Dispatch<SetStateAction<string>>;
-  setCity: Dispatch<SetStateAction<string>>;
-  setPostalCode: Dispatch<SetStateAction<string>>;
-  formType: string;
-  formTitle: string;
-};
+// make parcel as a single state
+// if user is logged in, set sender id
 
-export const SendParcel = () => {
+// maybe can skip this
+// confirmation page after successful post
+// alert on error
+
+// redirect to parcel page on confirmation
+
+// Login to view all your siuntos?
+
+//Confirmation page after parcel sending
+
+export const SendParcelForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [rName, setRname] = useState('');
   const [rSurname, setRsurname] = useState('');
   const [rPhoneNum, setRphoneNum] = useState('');
@@ -39,6 +46,7 @@ export const SendParcel = () => {
   const [rAddress2, setRaddress2] = useState('');
   const [rCity, setRcity] = useState('');
   const [rPostalCode, setRpostalCode] = useState('');
+  const [rTerminalId, setRTerminalId] = useState<number | null>(null);
 
   const [sName, setSname] = useState('');
   const [sSurname, setSsurname] = useState('');
@@ -48,6 +56,7 @@ export const SendParcel = () => {
   const [sAddress2, setSaddress2] = useState('');
   const [sCity, setScity] = useState('');
   const [sPostalCode, setSpostalCode] = useState('');
+  const [sTerminalId, setSTerminalId] = useState<number | null>(null);
 
   const [size, setSize] = useState('0');
 
@@ -55,56 +64,103 @@ export const SendParcel = () => {
     setSize(event.target.value as string);
   };
 
+  const [terminals, setTerminals] = useState<Terminal[]>([]);
+  useEffect(() => {
+    //TODO handle error
+    api.get<Array<Terminal>>('terminal/all', {}, true).then((response) => {
+      setTerminals(response);
+    });
+  }, []);
+
   // const isLogged = useSelector(getLoginState)?.user;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    let lat = 0;
-    let lng = 0;
-    await geocode(rAddress + ', ' + rCity + ' ' + rPostalCode).then((res) => {
-      try {
-        lat = res[0].geometry.location.lat();
-        lng = res[0].geometry.location.lng();
-      } catch (e) {
-        console.log(e);
-      }
-    });
+    //TODO to handle errors
+    //TODO add sender user if logged in
 
-    const parcel = {
-      trackingNumber: '',
-      size: size,
-      shippingAddress: {
-        name: sName,
-        lastName: sSurname,
-        email: sEmail,
-        phoneNumber: sPhoneNum,
-        city: sCity,
-        addressLine1: sAddress,
-        addressLine2: sAddress2,
-        postalCode: sPostalCode,
-        country: 'Lithuania',
-      },
-      deliveryAddress: {
-        name: rName,
-        lastName: rSurname,
-        email: rEmail,
-        phoneNumber: rPhoneNum,
-        city: rCity,
+    const receiverDetails = {
+      firstName: rName,
+      lastName: rSurname,
+      email: rEmail,
+      phoneNumber: rPhoneNum,
+    };
+    const shipperDetails = {
+      firstName: sName,
+      lastName: sSurname,
+      email: sEmail,
+      phoneNumber: sPhoneNum,
+    };
+
+    let parcel: any = {
+      size: Number(size),
+      receiverDetails,
+      shipperDetails,
+    };
+
+    if (rTerminalId) {
+      parcel = { ...parcel, deliveryTerminalId: rTerminalId };
+    } else {
+      let latitude = null;
+      let longitude = null;
+      await geocode(rAddress + ', ' + rCity + ' ' + rPostalCode).then((res) => {
+        try {
+          latitude = res[0].geometry.location.lat();
+          longitude = res[0].geometry.location.lng();
+        } catch (e) {
+          console.log(e);
+        }
+      });
+
+      const deliveryAddress = {
         addressLine1: rAddress,
         addressLine2: rAddress2,
         postalCode: rPostalCode,
+        city: rCity,
         country: 'Lithuania',
-        latitude: lat,
-        longitude: lng,
-      },
-      status: [],
-    };
+        latitude,
+        longitude,
+      };
+      parcel = { ...parcel, deliveryAddress };
+    }
 
-    api.post('parcel', parcel).then((response) => {
-      console.log(response);
+    if (sTerminalId) {
+      parcel = { ...parcel, pickupTerminalId: sTerminalId };
+    } else {
+      let latitude = null;
+      let longitude = null;
+      await geocode(sAddress + ', ' + sCity + ' ' + sPostalCode).then((res) => {
+        try {
+          latitude = res[0].geometry.location.lat();
+          longitude = res[0].geometry.location.lng();
+        } catch (e) {
+          console.log(e);
+        }
+      });
+
+      const pickupAddress = {
+        addressLine1: sAddress,
+        addressLine2: sAddress2,
+        postalCode: sPostalCode,
+        city: sCity,
+        country: 'Lithuania',
+        latitude,
+        longitude,
+      };
+      parcel = { ...parcel, pickupAddress };
+    }
+
+    api.post<Parcel>('parcel', parcel).then((response) => {
+      dispatch(
+        SetNotificationAction({
+          isOpen: true,
+          message: 'Parcel Successfully Registered',
+          type: 'success',
+        })
+      );
+      navigate(`/parcel/${response.trackingNumber}`, { state: { parcel: response } });
     });
-    console.log(parcel);
   };
 
   return (
@@ -114,7 +170,7 @@ export const SendParcel = () => {
       </Typography>
       <FormWrapper id="parcelForm" onSubmit={handleSubmit}>
         <FormFlex>
-          <SendParcelForm
+          <AddressForm
             setName={setRname}
             setSurname={setRsurname}
             setPhoneNum={setRphoneNum}
@@ -123,10 +179,12 @@ export const SendParcel = () => {
             setAddress2={setRaddress2}
             setCity={setRcity}
             setPostalCode={setRpostalCode}
+            setTerminalId={setRTerminalId}
             formType="receiver"
             formTitle="Receiver"
+            terminals={terminals}
           />
-          <SendParcelForm
+          <AddressForm
             setName={setSname}
             setSurname={setSsurname}
             setPhoneNum={setSphoneNum}
@@ -135,8 +193,10 @@ export const SendParcel = () => {
             setAddress2={setSaddress2}
             setCity={setScity}
             setPostalCode={setSpostalCode}
+            setTerminalId={setSTerminalId}
             formType="sender"
             formTitle="Sender"
+            terminals={terminals}
           />
         </FormFlex>
         <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }} size="small">

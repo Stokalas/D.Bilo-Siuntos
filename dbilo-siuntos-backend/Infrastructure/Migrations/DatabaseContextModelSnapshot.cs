@@ -44,27 +44,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<double?>("Latitude")
                         .HasColumnType("float");
 
                     b.Property<double?>("Longitude")
                         .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
@@ -72,7 +56,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
@@ -80,13 +64,16 @@ namespace Infrastructure.Migrations
                     b.Property<string>("TrackingNumber")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("DeliveryAddressId")
+                    b.Property<int?>("DeliveryAddressId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("DeliveryTerminalId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PickupAddressId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
@@ -98,32 +85,67 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("ShipmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ShipperID")
+                    b.Property<int?>("PickupTerminalId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ShippingAddressId")
+                    b.Property<int>("ReceiverDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShipperDetailsId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ShipperId")
                         .HasColumnType("int");
 
                     b.Property<int>("Size")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TerminalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("TrackingNumber");
 
                     b.HasIndex("DeliveryAddressId");
 
-                    b.HasIndex("ShippingAddressId");
+                    b.HasIndex("DeliveryTerminalId");
 
-                    b.HasIndex("TerminalId");
+                    b.HasIndex("PickupAddressId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PickupTerminalId");
+
+                    b.HasIndex("ReceiverDetailsId");
+
+                    b.HasIndex("ShipperDetailsId");
+
+                    b.HasIndex("ShipperId");
 
                     b.ToTable("Parcels");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.RecipientDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecipientDetails");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Status", b =>
@@ -134,11 +156,11 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ParcelId")
-                        .HasColumnType("int");
 
                     b.Property<int>("ParcelStatus")
                         .HasColumnType("int");
@@ -146,11 +168,18 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ParcelTrackingNumber")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("TerminalId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("ParcelTrackingNumber");
 
-                    b.ToTable("Status");
+                    b.HasIndex("TerminalId");
+
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
@@ -161,35 +190,16 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AddressLine1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressLine2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("float");
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.ToTable("Terminals");
                 });
@@ -421,42 +431,96 @@ namespace Infrastructure.Migrations
                     b.HasOne("Infrastructure.Models.Address", "DeliveryAddress")
                         .WithMany()
                         .HasForeignKey("DeliveryAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infrastructure.Models.Terminal", "DeliveryTerminal")
+                        .WithMany()
+                        .HasForeignKey("DeliveryTerminalId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infrastructure.Models.Address", "PickupAddress")
+                        .WithMany()
+                        .HasForeignKey("PickupAddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infrastructure.Models.Terminal", "PickupTerminal")
+                        .WithMany()
+                        .HasForeignKey("PickupTerminalId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infrastructure.Models.RecipientDetails", "ReceiverDetails")
+                        .WithMany()
+                        .HasForeignKey("ReceiverDetailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Models.Address", "ShippingAddress")
+                    b.HasOne("Infrastructure.Models.RecipientDetails", "ShipperDetails")
                         .WithMany()
-                        .HasForeignKey("ShippingAddressId");
+                        .HasForeignKey("ShipperDetailsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Infrastructure.Models.Terminal", "Terminal")
+                    b.HasOne("Infrastructure.Models.User", "Shipper")
                         .WithMany("Parcels")
-                        .HasForeignKey("TerminalId");
-
-                    b.HasOne("Infrastructure.Models.User", null)
-                        .WithMany("Parcels")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ShipperId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("DeliveryAddress");
 
-                    b.Navigation("ShippingAddress");
+                    b.Navigation("DeliveryTerminal");
 
-                    b.Navigation("Terminal");
+                    b.Navigation("PickupAddress");
+
+                    b.Navigation("PickupTerminal");
+
+                    b.Navigation("ReceiverDetails");
+
+                    b.Navigation("Shipper");
+
+                    b.Navigation("ShipperDetails");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.Status", b =>
                 {
+                    b.HasOne("Infrastructure.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Infrastructure.Models.Parcel", "Parcel")
                         .WithMany("Status")
-                        .HasForeignKey("ParcelTrackingNumber");
+                        .HasForeignKey("ParcelTrackingNumber")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infrastructure.Models.Terminal", "Terminal")
+                        .WithMany()
+                        .HasForeignKey("TerminalId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Address");
 
                     b.Navigation("Parcel");
+
+                    b.Navigation("Terminal");
+                });
+
+            modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
+                {
+                    b.HasOne("Infrastructure.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>
                 {
                     b.HasOne("Infrastructure.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
                 });
@@ -515,11 +579,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Models.Parcel", b =>
                 {
                     b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Infrastructure.Models.Terminal", b =>
-                {
-                    b.Navigation("Parcels");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.User", b =>

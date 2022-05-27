@@ -97,6 +97,7 @@ builder.Services.AddSingleton<Secrets>(new Secrets()
     Email = builder.Configuration["Emailing"]
 });
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITerminalService, TerminalService>();
 
 var app = builder.Build();
 
