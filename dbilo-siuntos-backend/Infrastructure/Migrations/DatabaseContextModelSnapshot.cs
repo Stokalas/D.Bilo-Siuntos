@@ -73,10 +73,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<int?>("PickupAddressId")
                         .HasColumnType("int");
-=======
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -85,7 +84,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("ShipmentDate")
                         .HasColumnType("datetime2");
->>>>>>> develop
 
                     b.Property<int?>("PickupTerminalId")
                         .HasColumnType("int");
