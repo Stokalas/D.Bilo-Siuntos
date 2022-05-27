@@ -25,6 +25,7 @@ public class ParcelDto
     public TerminalDto? PickupTerminal { get; set; }
     public TerminalDto? DeliveryTerminal { get; set; }
 
+    public byte[] RowVersion { get; set; }
 
     public static Parcel GetEntity(ParcelDto parcelDto)
     {
@@ -59,6 +60,7 @@ public class ParcelDto
             DeliveryTerminal = parcel.DeliveryTerminal != null ? TerminalDto.GetDto(parcel.DeliveryTerminal) : null,
             DeliveryAddress = parcel.DeliveryAddress != null ? AddressDto.GetDto(parcel.DeliveryAddress) : null,
             Status = parcel.Status != null ? parcel.Status.Select(s => StatusDto.GetDto(s)).ToList() : null,
+            RowVersion = parcel.RowVersion,
         };
     }
 }

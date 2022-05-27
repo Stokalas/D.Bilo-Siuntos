@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
         {
             var cookie_token = Request.Cookies["token"];
             var username = UserGetter(cookie_token);
-            _logger.LogInformation("User {0} Executed {1}->{2}", username,this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
+            _logger.LogInformation("User {0} Executed {1}->{2}", username, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
             var result = await _service.GetAll();
             return Ok(result);
         }
@@ -50,6 +50,41 @@ namespace WebAPI.Controllers
             var res = await _service.GetByTrackingId(trackingNumber);
 
             return Ok(ParcelDto.GetDto(res));
+        }
+
+        [HttpPut("parcel/{trackingNumber}")]
+        public async Task<ActionResult<ParcelDto>> UpdateDeliveryTerminal(string trackingNumber, UpdateDeliverypTerminalRequest request)
+        {
+            _logger.LogInformation("Executed {0}->{1}({2})", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName, trackingNumber); ; //testing purposes
+            var existingParcel = await _service.GetByTrackingId(trackingNumber);
+            var terminal = await _terminalService.GetById(request.DeliveryTerminalId);
+            if (existingParcel == null)
+            {
+                return BadRequest(new BadRequestObjectResult($"Parcel with {trackingNumber} Id not found"));
+            }
+            if (terminal == null)
+            {
+                return BadRequest(new BadRequestObjectResult($"Terminal with {request.DeliveryTerminalId} Id not found"));
+            }
+            if (!existingParcel.RowVersion.SequenceEqual(request.RowVersion)&& !request.Overwrite)
+            {
+                return Conflict(new BadRequestObjectResult($"Concurrency Error!"));
+            }
+            existingParcel.DeliveryTerminal = terminal;
+            try
+            {
+                var res = await _service.Update(trackingNumber, existingParcel, request.Overwrite);
+
+                return Ok(ParcelDto.GetDto(res));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Conflict(new BadRequestObjectResult($"Concurrency Error!"));
+            }
+            catch (System.Exception)
+            {
+                return BadRequest(new BadRequestObjectResult($"Something went wrong!"));
+            }
         }
 
         [HttpPost("parcel")]
@@ -124,18 +159,18 @@ namespace WebAPI.Controllers
             if (parcel.PickupAddress != null)
             {
                 _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupAddress, parcel.TrackingNumber, username);
-
             }
             else
             {
-                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal.Address, parcel.TrackingNumber, username);
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal!.Address, parcel.TrackingNumber, username);
             }
 
-            _logger.LogInformation("User {0} Executed {1}->{2}", username,this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
+            _logger.LogInformation("User {0} Executed {1}->{2}", username, this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
 
             return Ok(ParcelDto.GetDto(res));
         }
-        private string UserGetter(string cookie)
+
+        private string UserGetter(string? cookie)
         {
             if (cookie != null)
             {
@@ -146,5 +181,5 @@ namespace WebAPI.Controllers
         }
 
     }
-    
+
 }

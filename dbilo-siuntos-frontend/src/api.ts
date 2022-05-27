@@ -28,8 +28,11 @@ const performPost = <TResponse>(
 const performPatch = <TResponse>(url: string, data: Record<string, unknown> = {}) =>
   performRequest<TResponse>({ data, method: 'patch', url });
 
-const performPut = <TResponse>(url: string, data: Record<string, unknown> = {}) =>
-  performRequest<TResponse>({ data, method: 'put', url });
+const performPut = <TResponse>(
+  url: string,
+  data: Record<string, unknown> = {},
+  withCredentials = false
+) => performRequest<TResponse>({ data, method: 'put', url, withCredentials });
 
 const performDelete = <TResponse>(
   url: string,

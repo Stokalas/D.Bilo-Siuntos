@@ -17,4 +17,5 @@ export interface Parcel {
   status: Status[];
   pickupTerminal?: Terminal;
   deliveryTerminal?: Terminal;
+  rowVersion: string;
 }
