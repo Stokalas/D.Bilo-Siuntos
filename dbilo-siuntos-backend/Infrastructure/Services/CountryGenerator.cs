@@ -16,9 +16,9 @@ namespace Infrastructure.Services
         {
             this._trackingNumberGenerator = trackingNumberGenerator;
         }
-        public Parcel GenerateNumber(Parcel parcel)
+        public Parcel GenerateNumber(Parcel parcel, string username)
         {
-            var tmp = this._trackingNumberGenerator.GenerateNumber(parcel);
+            var tmp = this._trackingNumberGenerator.GenerateNumber(parcel, username);
             switch (parcel.DeliveryAddress.Country)
             {
                 case "Lithuania":
