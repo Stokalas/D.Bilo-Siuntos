@@ -26,7 +26,7 @@ namespace Infrastructure.Services
             _secrets = secrets;
         }
 
-        public async void SendReceiver(Address data, string tracking)
+        public async void SendReceiver(RecipientDetails data, Address address, string tracking)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
                 email.From.Add(MailboxAddress.Parse(fromMail));
                 email.To.Add(MailboxAddress.Parse(data.Email));
 
-                string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you will soon receive your parcel to {data.AddressLine1}!<br> Here is tracking number to check where it is now: <br><strong>";
+                string mailbody = $"Hello {data.FirstName} {data.LastName}, <br><br> We are pleased to inform that you will soon receive your parcel to {address.AddressLine1}!<br> Here is tracking number to check where it is now: <br><strong>";
                 mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
                 email.Subject = "You are about to get your parcel";
                 email.Body = new TextPart(TextFormat.Html) { Text = mailbody };
@@ -76,7 +76,7 @@ namespace Infrastructure.Services
             }
         }
 
-        public async void SendSender(Address data, string tracking)
+        public async void SendSender(RecipientDetails data, string tracking)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Infrastructure.Services
                 email.From.Add(MailboxAddress.Parse(fromMail));
                 email.To.Add(MailboxAddress.Parse(data.Email));
 
-                string mailbody = $"Hello {data.Name} {data.LastName}, <br><br> We are pleased to inform that you shipped your parcel successfully! Here is tracking number: <br><strong>";
+                string mailbody = $"Hello {data.FirstName} {data.LastName}, <br><br> We are pleased to inform that you shipped your parcel successfully! Here is tracking number: <br><strong>";
                 mailbody += tracking + "</strong> <br><br> Best regards, <br> Dėdė Bilas";
                 email.Subject = "Shipped successfully!";
                 email.Body = new TextPart(TextFormat.Html) { Text = mailbody };

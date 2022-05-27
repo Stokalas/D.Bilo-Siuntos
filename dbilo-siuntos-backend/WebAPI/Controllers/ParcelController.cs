@@ -17,14 +17,16 @@ namespace WebAPI.Controllers
         private ITerminalService _terminalService;
         private IUserService _userService;
         private ITrackingNumberGenerator _generator;
+        private IEmailSender _emailSender;
 
-        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITerminalService terminalService, IUserService userService, ITrackingNumberGenerator generator)
+        public ParcelController(ILogger<ParcelController> logger, IParcelService service, ITerminalService terminalService, IUserService userService, ITrackingNumberGenerator generator, IEmailSender emailSender)
         {
             _logger = logger;
             _service = service;
             _terminalService = terminalService;
             _userService = userService;
             _generator = generator;
+            _emailSender = emailSender;
         }
 
         [HttpGet("parcel/all")]
@@ -111,6 +113,17 @@ namespace WebAPI.Controllers
 
             parcel = _generator.GenerateNumber(parcel);
             var res = await _service.Insert(parcel);
+            _emailSender.SendSender(parcel.ShipperDetails, parcel.TrackingNumber);
+            if (parcel.PickupAddress != null)
+            {
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupAddress, parcel.TrackingNumber);
+
+            }
+            else
+            {
+                _emailSender.SendReceiver(parcel.ReceiverDetails, parcel.PickupTerminal.Address, parcel.TrackingNumber);
+            }
+
             _logger.LogInformation("Executed {0}->{1}", this.GetType().Name, ControllerContext.ActionDescriptor.ActionName); //testing purposes
 
             return Ok(ParcelDto.GetDto(res));
